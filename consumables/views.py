@@ -30,33 +30,7 @@ def logout_view(request):
 def home(request):
     # Only fetch categories to display main menu
     categories = Category.objects.all()
-    
-    mvp_data = None
-    today = timezone.localdate()
-    
-    # 4 is Friday (Monday is 0)
-    if today.weekday() == 4:
-        # It's Friday! Calculate MVP of the last week (Last Friday to Yesterday/Thursday)
-        last_friday = today - timedelta(days=7)
-        yesterday = today - timedelta(days=1)
-        
-        # Aggregate scores
-        winner = ConsumptionRecord.objects.filter(
-            date__range=[last_friday, yesterday]
-        ).values('user__username', 'user__first_name').annotate(
-            total_score=Sum(F('quantity') * F('item__score'))
-        ).order_by('-total_score').first()
-        
-        if winner:
-            mvp_data = {
-                'name': winner['user__first_name'] or winner['user__username'],
-                'score': winner['total_score']
-            }
-
-    return render(request, 'consumables/home.html', {
-        'categories': categories,
-        'weekly_mvp': mvp_data
-    })
+    return render(request, 'consumables/home.html', {'categories': categories})
 
 @login_required
 def view_category(request, category_id):
@@ -326,12 +300,21 @@ def leaderboard(request):
             lifetime_data.append({'user': u, 'score': score})
     lifetime_data.sort(key=lambda x: x['score'], reverse=True)
     
-    # 2. Weekly Winner Logic
+    # 2. Weekly Winner / Leader Logic
     today = timezone.now().date()
-    days_since_friday = (today.weekday() - 4) % 7
-    start_date = today - timedelta(days=days_since_friday)
     
-    weekly_records = ConsumptionRecord.objects.filter(date__gte=start_date)
+    if today.weekday() == 4:
+        # It's Friday! Show the COMPLETED week's winner (Last Fri - Thu)
+        # matches Home Page Banner logic
+        start_date = today - timedelta(days=7)
+        end_date = today - timedelta(days=1)
+        weekly_records = ConsumptionRecord.objects.filter(date__range=[start_date, end_date])
+    else:
+        # Saturday-Thursday: Show CURRENT week race (Start from most recent Friday)
+        days_since_friday = (today.weekday() - 4) % 7
+        start_date = today - timedelta(days=days_since_friday)
+        weekly_records = ConsumptionRecord.objects.filter(date__gte=start_date)
+
     # Calculate weekly scores
     weekly_scores = {}
     for r in weekly_records:
@@ -346,8 +329,6 @@ def leaderboard(request):
         weekly_winner = {'user': winner_user, 'score': weekly_scores[winner_user]}
         
     is_friday = (today.weekday() == 4)
-    # FOR TESTING: Uncomment next line to force Friday view
-    # is_friday = True 
     
     return render(request, 'consumables/leaderboard.html', {
         'lifetime_leaderboard': lifetime_data,
