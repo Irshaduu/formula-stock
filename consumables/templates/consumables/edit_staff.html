@@ -1,0 +1,22 @@
+{% extends 'consumables/base.html' %}
+
+{% block content %}
+<div style="margin-bottom: 20px;">
+    <a href="{% url 'manage_staff' %}" style="color: var(--text-secondary);">&lsaquo; Back</a>
+</div>
+
+<h2>Edit {{ staff.username }}</h2>
+
+<form method="post">
+    {% csrf_token %}
+    <label style="display: block; color: var(--text-secondary);">Username (ID)</label>
+    <input type="text" name="username" value="{{ staff.username }}" required>
+
+    <label style="display: block; color: var(--text-secondary); margin-top: 15px;">New Password (Optional)</label>
+    <div style="font-size: 0.8rem; color: var(--accent-yellow); margin-bottom: 5px;">Leave blank to keep current
+        password.</div>
+    <input type="password" name="password" placeholder="Enter new password to change">
+
+    <button type="submit" class="btn btn-primary" style="margin-top: 20px; width: 100%;">Update Account</button>
+</form>
+{% endblock %}

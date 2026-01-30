@@ -1,0 +1,344 @@
+/* Formula D Store - Premium Dark Theme */
+:root {
+    --bg-color: #0f0f0f;
+    --card-bg: #1e1e1e;
+    --text-primary: #ffffff;
+    --text-secondary: #a0a0a0;
+    --accent-red: #ff3b30;
+    --accent-blue: #007aff;
+    --accent-green: #34c759;
+    --accent-yellow: #ffcc00;
+    --border-color: #333333;
+    --glass-bg: rgba(30, 30, 30, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.1);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    line-height: 1.6;
+    padding-bottom: 80px;
+    /* Space for fixed nav if bottom, or just breathing room */
+}
+
+/* Typography */
+h1,
+h2,
+h3 {
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-bottom: 1rem;
+}
+
+a {
+    color: var(--accent-blue);
+    text-decoration: none;
+}
+
+/* Layout */
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Navbar */
+.navbar {
+    background-color: var(--card-bg);
+    padding: 15px;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 1px solid var(--border-color);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    background: var(--glass-bg);
+}
+
+.nav-link {
+    color: var(--text-secondary);
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding: 8px 12px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.nav-link.active,
+.nav-link:hover {
+    color: var(--text-primary);
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: var(--card-bg);
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.5);
+    z-index: 1;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    top: 100%;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown-content a {
+    color: var(--text-primary);
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-content a:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Cards & Lists */
+.category-section {
+    margin-bottom: 40px;
+}
+
+.category-title {
+    font-size: 1.5rem;
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    color: var(--accent-blue);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.item-card {
+    background-color: var(--card-bg);
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid var(--border-color);
+    transition: transform 0.2s;
+}
+
+.item-card:active {
+    transform: scale(0.98);
+}
+
+.item-info {
+    flex-grow: 1;
+}
+
+.item-name {
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.item-stock {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+/* Buttons */
+.btn {
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+    text-align: center;
+    display: inline-block;
+}
+
+.btn-primary {
+    background-color: var(--accent-blue);
+    color: white;
+}
+
+.btn-take {
+    background-color: var(--card-bg);
+    /* Default, will be colored by status */
+    color: white;
+    border: 1px solid var(--border-color);
+}
+
+.btn-take.green {
+    background-color: var(--accent-green);
+    color: #000;
+}
+
+.btn-take.yellow {
+    background-color: var(--accent-yellow);
+    color: #000;
+}
+
+.btn-take.red {
+    background-color: var(--accent-red);
+}
+
+.btn-edit {
+    background-color: transparent;
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+}
+
+.btn-danger {
+    background-color: rgba(255, 59, 48, 0.2);
+    color: var(--accent-red);
+    border: 1px solid var(--accent-red);
+}
+
+/* Forms */
+input[type="text"],
+input[type="password"],
+input[type="number"] {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0;
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    color: white;
+    font-size: 1rem;
+}
+
+input:focus {
+    outline: none;
+    border-color: var(--accent-blue);
+}
+
+/* Modal / Take Page */
+.take-container {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.qty-input {
+    font-size: 2rem;
+    text-align: center;
+    width: 100px !important;
+    margin: 20px auto !important;
+}
+
+/* Leaderboard */
+.leaderboard-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.leaderboard-table th,
+.leaderboard-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.leaderboard-row:first-child .rank {
+    color: var(--accent-yellow);
+    font-size: 1.2rem;
+}
+
+/* Mobile Tweaks & Compaction */
+@media (max-width: 600px) {
+    .container {
+        padding: 5px;
+        /* Extremely minimal padding */
+        max-width: 100%;
+    }
+
+    /* Navbar Compaction */
+    .navbar {
+        padding: 6px 10px;
+        gap: 5px;
+        justify-content: space-between;
+    }
+
+    .nav-link {
+        padding: 5px 8px;
+        font-size: 0.8rem;
+    }
+
+    .dropdown-content {
+        right: 0;
+        left: auto;
+    }
+
+    /* List & Card Compaction - Skinny Mode */
+    .category-section {
+        margin-bottom: 15px;
+        /* Tighter category spacing */
+    }
+
+    .category-title {
+        font-size: 1rem;
+        padding-bottom: 2px;
+        margin-bottom: 5px;
+        /* Tighter title spacing */
+        border-width: 1px;
+    }
+
+    .item-card {
+        padding: 5px 8px;
+        /* Very compact padding */
+        margin-bottom: 4px;
+        /* Tiny gap between items */
+        min-height: 40px;
+        /* Reduced specific height */
+        border-radius: 6px;
+    }
+
+    .item-name {
+        font-size: 0.9rem;
+        font-weight: 500;
+    }
+
+    .item-stock {
+        font-size: 0.7rem;
+    }
+
+    /* Button Compaction */
+    .btn {
+        padding: 4px 10px;
+        font-size: 0.8rem;
+        border-radius: 6px;
+    }
+
+    .btn-take {
+        min-width: 50px;
+        padding: 3px 0;
+    }
+
+    /* Header adjustments */
+    h1,
+    h2,
+    h3 {
+        margin-bottom: 0.4rem;
+    }
+
+    h2 {
+        font-size: 1.1rem;
+    }
+
+    h3 {
+        font-size: 0.95rem;
+    }
+}

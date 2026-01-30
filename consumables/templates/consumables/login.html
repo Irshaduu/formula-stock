@@ -1,0 +1,37 @@
+{% extends 'consumables/base.html' %}
+
+{% block content %}
+<div style="display: flex; justify-content: center; align-items: center; height: 80vh;">
+    <div
+        style="background: var(--card-bg); padding: 40px; border-radius: 16px; border: 1px solid var(--border-color); width: 100%; max-width: 400px; text-align: center;">
+        <h2 style="color: var(--accent-red); margin-bottom: 30px;">FORMULA D STORE</h2>
+        <form method="post">
+            {% csrf_token %}
+
+            {% if form.errors %}
+            <div style="color: var(--accent-red); margin-bottom: 20px; font-weight: bold;">
+                Invalid username or password. Please try again.
+            </div>
+            {% endif %}
+
+            <div style="text-align: left; margin-bottom: 20px;">
+                <label style="color: var(--text-secondary); font-size: 0.9rem;">Worker Name</label>
+                {{ form.username }}
+            </div>
+            <div style="text-align: left; margin-bottom: 30px;">
+                <label style="color: var(--text-secondary); font-size: 0.9rem;">Password</label>
+                {{ form.password }}
+            </div>
+            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 15px;">Login</button>
+        </form>
+    </div>
+</div>
+
+<style>
+    /* Override specific inputs for login only if needed, mostly handled by global css */
+    #id_username,
+    #id_password {
+        box-sizing: border-box;
+    }
+</style>
+{% endblock %}

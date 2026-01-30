@@ -1,0 +1,24 @@
+{% extends 'consumables/base.html' %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <h2>Manage Staff</h2>
+    <a href="{% url 'add_staff' %}" class="btn btn-primary">+ New Staff</a>
+</div>
+
+{% for staff in staff_members %}
+<a href="{% url 'profile_view' staff.id %}" class="item-card"
+    style="text-decoration: none; color: inherit; display: flex; justify-content: space-between; align-items: center; transition: transform 0.2s;">
+    <div class="item-info">
+        <div class="item-name" style="color: var(--text-primary);">{{ staff.username }}</div>
+        <div class="item-stock" style="color: var(--text-secondary);">
+            {% if staff.is_superuser %}Admin{% else %}Worker{% endif %}
+            | Joined: {{ staff.date_joined|date:"Y-m-d" }}
+        </div>
+    </div>
+    <div style="color: var(--text-secondary); font-size: 1.5rem;">
+        &rsaquo;
+    </div>
+</a>
+{% endfor %}
+{% endblock %}

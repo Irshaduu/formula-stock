@@ -1,0 +1,80 @@
+{% extends 'consumables/base.html' %}
+
+{% block content %}
+<div style="text-align: center; margin-bottom: 30px; position: relative;">
+    {% if profile_user == request.user %}
+    <a href="{% url 'logout' %}" onclick="return confirm('Logout?')" class="profile-logout-btn">
+        Logout
+    </a>
+    {% endif %}
+
+    <h2 style="margin-bottom: 5px;">{{ profile_user.first_name|default:profile_user.username }}</h2>
+    <div style="color: var(--text-secondary);">
+        {% if profile_user.is_superuser %}Admin{% else %}Worker{% endif %} Profile
+    </div>
+</div>
+
+<style>
+    .profile-logout-btn {
+        position: absolute;
+        top: 0;
+        right: 15px;
+        background: rgba(255, 59, 48, 0.15);
+        color: #ff3b30;
+        font-size: 0.75rem;
+        padding: 6px 10px;
+        border: 1px solid rgba(255, 59, 48, 0.3);
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.2s;
+    }
+
+    @media (max-width: 600px) {
+        .profile-logout-btn {
+            font-size: 0.65rem;
+            padding: 4px 8px;
+            border-radius: 6px;
+            top: -5px;
+            /* Adjust vertical position slightly if needed */
+            right: 5px;
+        }
+    }
+</style>
+
+<div
+    style="background: var(--card-bg); padding: 20px; border-radius: 12px; text-align: center; margin-bottom: 30px; border: 1px solid var(--border-color);">
+    <div style="font-size: 0.9rem; color: var(--text-secondary);">Total Credits</div>
+    <div style="font-size: 2.5rem; font-weight: 700; color: var(--accent-yellow);">{{ total_credits }}</div>
+
+    {% if request.user.is_superuser %}
+    <div
+        style="margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border-color); display: flex; gap: 10px; justify-content: center;">
+        <a href="{% url 'edit_staff' profile_user.id %}" class="btn btn-edit" style="font-size: 0.9rem;">Edit
+            Account</a>
+        {% if profile_user != request.user %}
+        <a href="{% url 'delete_staff' profile_user.id %}" class="btn btn-danger" style="font-size: 0.9rem;"
+            onclick="return confirm('Delete {{ profile_user.username }}? This cannot be undone and will delete all their history.')">Delete
+            Account</a>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+
+<h3>History</h3>
+{% for record in records %}
+<div class="item-card">
+    <div class="item-info">
+        <div class="item-name">{{ record.item.name }}
+            <span style="font-size: 0.8rem; color: var(--accent-blue); margin-left: 10px;">
+                x {{ record.quantity }}
+            </span>
+        </div>
+        <div class="item-stock">{{ record.date }}</div>
+    </div>
+    <div style="color: var(--accent-yellow); font-weight: bold;">
+        +{{ record.total_credits }}
+    </div>
+</div>
+{% endfor %}
+{% endblock %}

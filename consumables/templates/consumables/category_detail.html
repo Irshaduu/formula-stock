@@ -1,0 +1,24 @@
+{% extends 'consumables/base.html' %}
+
+{% block content %}
+<div style="margin-bottom: 20px;">
+    <a href="{% url 'manage_categories' %}" style="color: var(--text-secondary);">&lsaquo; Back</a>
+</div>
+
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <h2>{{ category.name }}</h2>
+    <a href="{% url 'add_item' category.id %}" class="btn btn-primary">+ New Item</a>
+</div>
+
+{% for item in category.items.all %}
+<div class="item-card">
+    <div class="item-info">
+        <div class="item-name">{{ item.name }}</div>
+        <div class="item-stock">Avg: {{ item.average_stock }} | Score: {{ item.score }}</div>
+    </div>
+    <div>
+        <a href="{% url 'edit_item' item.id %}" class="btn btn-edit">Edit</a>
+    </div>
+</div>
+{% endfor %}
+{% endblock %}

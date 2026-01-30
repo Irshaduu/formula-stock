@@ -1,0 +1,58 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formula D Store</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    {% if user.is_authenticated %}
+    <nav class="navbar">
+        <a href="{% url 'home' %}"
+            class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}">Home</a>
+        <a href="{% url 'stock_list' %}"
+            class="nav-link {% if request.resolver_match.url_name == 'stock_list' %}active{% endif %}">Restock</a>
+        <a href="{% url 'today' %}"
+            class="nav-link {% if request.resolver_match.url_name == 'today' %}active{% endif %}">Today</a>
+
+        <div class="dropdown">
+            <span class="nav-link" style="cursor: pointer;">Manage &#9662;</span>
+            <div class="dropdown-content">
+                <a href="{% url 'manage_categories' %}">Categories</a>
+                {% if request.user.is_superuser %}
+                <a href="{% url 'manage_staff' %}">Staff</a>
+                <a href="{% url 'logout' %}" onclick="return confirm('Logout of Admin?')">Logout</a>
+                {% else %}
+                <a href="{% url 'profile' %}">Profile</a>
+                {% endif %}
+                <a href="{% url 'leaderboard' %}">MVP</a>
+            </div>
+        </div>
+    </nav>
+    {% endif %}
+
+    <div class="container">
+        {% if messages %}
+        {% for message in messages %}
+        <div
+            style="background: rgba(52, 199, 89, 0.2); color: #34c759; padding: 10px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #34c759;">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        {% block content %}
+        {% endblock %}
+    </div>
+
+</body>
+
+</html>

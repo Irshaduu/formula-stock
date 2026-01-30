@@ -1,0 +1,27 @@
+{% extends 'consumables/base.html' %}
+
+{% block content %}
+<div style="margin-bottom: 20px;">
+    <a href="{% url 'category_detail' category.id %}" style="color: var(--text-secondary);">&lsaquo; Back</a>
+</div>
+
+<h2>New Item in {{ category.name }}</h2>
+
+<form method="post">
+    {% csrf_token %}
+
+    <label style="display: block; color: var(--text-secondary);">Item Name</label>
+    <input type="text" name="name" required autofocus>
+
+    <label style="display: block; color: var(--text-secondary); margin-top: 15px;">Average Stock (Ideal)</label>
+    <input type="number" name="average_stock" value="0">
+
+    <label style="display: block; color: var(--text-secondary); margin-top: 15px;">Current Stock</label>
+    <input type="number" name="current_stock" value="0">
+
+    <label style="display: block; color: var(--text-secondary); margin-top: 15px;">Score (Credits per unit)</label>
+    <input type="number" name="score" value="1">
+
+    <button type="submit" class="btn btn-primary" style="margin-top: 20px; width: 100%;">Create Item</button>
+</form>
+{% endblock %}

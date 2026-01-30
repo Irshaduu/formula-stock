@@ -1,0 +1,27 @@
+{% extends 'consumables/base.html' %}
+
+{% block content %}
+<div style="margin-bottom: 20px;">
+    <a href="{% url 'category_detail' item.category.id %}" style="color: var(--text-secondary);">&lsaquo; Back</a>
+</div>
+
+<h2>Edit {{ item.name }}</h2>
+
+<form method="post">
+    {% csrf_token %}
+
+    <label style="display: block; color: var(--text-secondary);">Item Name</label>
+    <input type="text" name="name" value="{{ item.name }}" required>
+
+    <label style="display: block; color: var(--text-secondary); margin-top: 15px;">Average Stock (Ideal)</label>
+    <input type="number" name="average_stock" value="{{ item.average_stock }}">
+
+    <label style="display: block; color: var(--text-secondary); margin-top: 15px;">Current Stock</label>
+    <input type="number" name="current_stock" value="{{ item.current_stock }}">
+
+    <label style="display: block; color: var(--text-secondary); margin-top: 15px;">Score (Credits per unit)</label>
+    <input type="number" name="score" value="{{ item.score }}">
+
+    <button type="submit" class="btn btn-primary" style="margin-top: 20px; width: 100%;">Save Changes</button>
+</form>
+{% endblock %}

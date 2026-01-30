@@ -1,0 +1,422 @@
+{% extends 'consumables/base.html' %}
+{% load static %}
+
+{% block content %}
+<div style="text-align: center; margin-bottom: 25px;">
+
+    <!-- WEEKLY MYSTERY SECTION -->
+    {% if is_friday and weekly_winner %}
+    <!-- WINNER REVEAL (FRIDAY) -->
+    <div style="animation: popIn 0.6s ease-out;">
+        <h2
+            style="color: var(--accent-yellow); font-size: 1.5rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 5px; text-shadow: 0 0 20px rgba(234, 179, 8, 0.4);">
+            🏆 Weekly MVP 🏆
+        </h2>
+        <div style="color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 15px;">
+            Week of {{ start_date|date:"M d" }}
+        </div>
+
+        <div style="background: linear-gradient(180deg, rgba(34, 197, 94, 0.15) 0%, rgba(20, 20, 20, 0) 100%); 
+                    border: 1px solid rgba(34, 197, 94, 0.3); padding: 15px 20px; border-radius: 16px; display: inline-flex; align-items: center; gap: 20px; width: 100%; max-width: 500px;
+                    box-shadow: 0 5px 20px -5px rgba(34, 197, 94, 0.2); text-align: left;">
+
+            <div style="flex: 1;">
+                <div
+                    style="font-size: 1.8rem; margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                    👑 {{ weekly_winner.user.first_name|default:weekly_winner.user.username }}
+                </div>
+                <div style="font-size: 1.2rem; font-weight: 800; color: var(--accent-yellow);">
+                    {{ weekly_winner.score }} Credits
+                </div>
+            </div>
+
+            <!-- Prize Image Only - Enhanced 3D Look -->
+            <div style="padding-left: 20px; text-align: center; min-width: 120px; position: relative; z-index: 10; perspective: 1000px; display: flex; flex-direction: column; align-items: center; gap: 8px;">
+                <div class="prize-label">PRIZE</div>
+                <div class="fizz-bottle-3d">
+                    <img src="{% static 'images/apple_fizz.png' %}" alt="Apple Fizz"
+                        style="width: 100px; height: auto;">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% else %}
+
+    <!-- MYSTERY BOX (SAT-THU) - ENHANCED VERSION -->
+    <div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 15px;">
+        <h2
+            style="color: var(--text-secondary); font-size: 1.2rem; text-transform: uppercase; letter-spacing: 2px; margin: 0;">
+            🏎️ Weekly Race 🏎️
+        </h2>
+    </div>
+
+    <div class="weekly-race-card">
+        <!-- Animated background particles -->
+        <div class="particle particle-1"></div>
+        <div class="particle particle-2"></div>
+        <div class="particle particle-3"></div>
+
+        <!-- Main glow effect -->
+        <div class="glow-orb"></div>
+
+        <div style="text-align: left; z-index: 1; flex: 1;">
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 5px;">
+                <span style="font-size: 2.2rem; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));">🤫</span>
+                <div>
+                    <div style="font-size: 1.15rem; font-weight: 800; color: white; margin-bottom: 2px; text-shadow: 0 2px 4px rgba(0,0,0,0.3);">
+                        Who is leading?
+                    </div>
+                    <div style="font-size: 0.8rem; color: var(--text-secondary); font-weight: 500;">
+                        Winner revealed Friday!
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Prize Image - Amazing 3D Effect -->
+        <div style="position: relative; z-index: 10; perspective: 1000px; display: flex; flex-direction: column; align-items: center; gap: 8px;">
+            <div class="prize-label">PRIZE</div>
+            <div class="fizz-bottle-3d">
+                <img src="{% static 'images/apple_fizz.png' %}" alt="Apple Fizz"
+                    style="width: 95px; height: auto;">
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+</div>
+
+<!-- LIFETIME LEADERBOARD -->
+<div
+    style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 15px; border-bottom: 1px solid var(--border-color); padding-bottom: 5px;">
+    <h3 style="margin: 0; font-size: 1.1rem;">Lifetime Leaderboard</h3>
+    <span style="font-size: 0.75rem; color: var(--text-secondary);">All Time Credits</span>
+</div>
+
+{% if lifetime_leaderboard %}
+<div style="display: flex; flex-direction: column; gap: 8px; max-height: 50vh; overflow-y: auto; padding-right: 5px;">
+    {% for entry in lifetime_leaderboard %}
+    <div class="item-card"
+        style="display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; border: 1px solid var(--border-color); background: var(--card-bg); margin-bottom: 0;">
+
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <div
+                style="font-size: 1rem; font-weight: bold; width: 20px; text-align: center; 
+                            {% if forloop.counter == 1 %}color: var(--accent-yellow); font-size: 1.2rem;{% elif forloop.counter == 2 %}color: #e2e8f0;{% elif forloop.counter == 3 %}color: #d97706;{% else %}color: var(--text-secondary);{% endif %}">
+                #{{ forloop.counter }}
+            </div>
+            <div>
+                <div class="item-name" style="font-size: 1rem; font-weight: 600;">
+                    {{ entry.user.first_name|default:entry.user.username }}
+                </div>
+            </div>
+        </div>
+
+        <div style="text-align: right;">
+            <div style="font-size: 1.1rem; font-weight: 800; color: var(--accent-yellow);">
+                {{ entry.score }}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div style="text-align: center; margin-top: 30px; color: var(--text-secondary);">
+    <p>No history yet.</p>
+</div>
+{% endif %}
+
+<style>
+    /* === PRIZE LABEL === */
+    .prize-label {
+        font-size: 0.7rem;
+        font-weight: 900;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        color: var(--accent-yellow);
+        background: linear-gradient(135deg, rgba(234, 179, 8, 0.15) 0%, rgba(234, 179, 8, 0.05) 100%);
+        border: 1.5px solid rgba(234, 179, 8, 0.4);
+        padding: 4px 14px;
+        border-radius: 20px;
+        text-shadow: 0 0 10px rgba(234, 179, 8, 0.5), 0 2px 4px rgba(0, 0, 0, 0.4);
+        box-shadow: 0 0 15px rgba(234, 179, 8, 0.2), 0 2px 8px rgba(0, 0, 0, 0.3);
+        position: relative;
+        overflow: hidden;
+        animation: prizeGlow 2s ease-in-out infinite;
+    }
+
+    .prize-label::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.2) 50%, transparent 100%);
+        animation: prizeShimmer 3s linear infinite;
+    }
+
+    @keyframes prizeGlow {
+        0%, 100% {
+            box-shadow: 0 0 15px rgba(234, 179, 8, 0.2), 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+        50% {
+            box-shadow: 0 0 25px rgba(234, 179, 8, 0.4), 0 2px 10px rgba(0, 0, 0, 0.4);
+        }
+    }
+
+    @keyframes prizeShimmer {
+        0% {
+            left: -100%;
+        }
+        100% {
+            left: 200%;
+        }
+    }
+
+    /* === ANIMATIONS === */
+    @keyframes popIn {
+        0% {
+            transform: scale(0.9);
+            opacity: 0;
+        }
+        100% {
+            transform: scale(1);
+            opacity: 1;
+        }
+    }
+
+    @keyframes fizzFloat {
+        0%, 100% {
+            transform: translateY(0px) rotate(-8deg);
+        }
+        50% {
+            transform: translateY(-12px) rotate(-5deg);
+        }
+    }
+
+    @keyframes bottleRotate {
+        0%, 100% {
+            transform: rotateY(-15deg) rotateX(5deg);
+        }
+        50% {
+            transform: rotateY(15deg) rotateX(-5deg);
+        }
+    }
+
+    @keyframes glowPulse {
+        0%, 100% {
+            opacity: 0.08;
+            transform: scale(1);
+        }
+        50% {
+            opacity: 0.15;
+            transform: scale(1.08);
+        }
+    }
+
+    @keyframes particleFloat1 {
+        0%, 100% {
+            transform: translate(0, 0);
+            opacity: 0.03;
+        }
+        50% {
+            transform: translate(20px, -20px);
+            opacity: 0.08;
+        }
+    }
+
+    @keyframes particleFloat2 {
+        0%, 100% {
+            transform: translate(0, 0);
+            opacity: 0.04;
+        }
+        50% {
+            transform: translate(-25px, -15px);
+            opacity: 0.09;
+        }
+    }
+
+    @keyframes particleFloat3 {
+        0%, 100% {
+            transform: translate(0, 0);
+            opacity: 0.03;
+        }
+        50% {
+            transform: translate(15px, 25px);
+            opacity: 0.07;
+        }
+    }
+
+    @keyframes shimmer {
+        0% {
+            background-position: -200% center;
+        }
+        100% {
+            background-position: 200% center;
+        }
+    }
+
+    /* === 3D FIZZ BOTTLE === */
+    .fizz-bottle-3d {
+        position: relative;
+        transform-style: preserve-3d;
+        animation: fizzFloat 3s ease-in-out infinite;
+        filter: drop-shadow(0 20px 25px rgba(0, 0, 0, 0.7)) 
+                drop-shadow(0 10px 15px rgba(0, 0, 0, 0.5));
+        transition: transform 0.3s ease;
+    }
+
+    .fizz-bottle-3d img {
+        display: block;
+        transform-style: preserve-3d;
+        animation: bottleRotate 6s ease-in-out infinite;
+    }
+
+    .fizz-bottle-3d::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 120%;
+        height: 120%;
+        background: radial-gradient(circle, rgba(234, 179, 8, 0.15) 0%, rgba(234, 179, 8, 0) 60%);
+        transform: translate(-50%, -50%);
+        border-radius: 50%;
+        z-index: -1;
+        animation: glowPulse 3s ease-in-out infinite;
+        pointer-events: none;
+    }
+
+    .fizz-bottle-3d::after {
+        content: '';
+        position: absolute;
+        top: 5%;
+        left: 15%;
+        width: 30%;
+        height: 25%;
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0) 60%);
+        border-radius: 50%;
+        filter: blur(10px);
+        z-index: 1;
+        pointer-events: none;
+        opacity: 0.6;
+    }
+
+    .fizz-bottle-3d:hover {
+        animation-play-state: paused;
+        transform: scale(1.05) translateY(-5px);
+    }
+
+    /* === WEEKLY RACE CARD === */
+    .weekly-race-card {
+        background: linear-gradient(135deg, rgba(30, 30, 30, 0.95) 0%, rgba(20, 20, 20, 0.98) 100%);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 20px 25px;
+        border-radius: 20px;
+        display: inline-flex;
+        align-items: center;
+        width: 100%;
+        max-width: 550px;
+        position: relative;
+        overflow: hidden;
+        justify-content: space-between;
+        box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.6),
+                    0 0 0 1px rgba(255, 255, 255, 0.05) inset,
+                    0 20px 60px -20px rgba(59, 130, 246, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .weekly-race-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 15px 50px -10px rgba(0, 0, 0, 0.7),
+                    0 0 0 1px rgba(255, 255, 255, 0.08) inset,
+                    0 25px 70px -20px rgba(59, 130, 246, 0.15);
+    }
+
+    /* Shimmer effect overlay */
+    .weekly-race-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -200%;
+        width: 200%;
+        height: 100%;
+        background: linear-gradient(90deg, 
+            transparent 0%, 
+            rgba(255, 255, 255, 0.015) 50%, 
+            transparent 100%);
+        animation: shimmer 8s linear infinite;
+        pointer-events: none;
+    }
+
+    /* === DECORATIVE PARTICLES === */
+    .particle {
+        position: absolute;
+        border-radius: 50%;
+        pointer-events: none;
+    }
+
+    .particle-1 {
+        width: 80px;
+        height: 80px;
+        background: radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, transparent 70%);
+        top: -20px;
+        left: 10%;
+        animation: particleFloat1 7s ease-in-out infinite;
+        filter: blur(20px);
+    }
+
+    .particle-2 {
+        width: 60px;
+        height: 60px;
+        background: radial-gradient(circle, rgba(168, 85, 247, 0.12) 0%, transparent 70%);
+        bottom: -10px;
+        right: 15%;
+        animation: particleFloat2 9s ease-in-out infinite;
+        filter: blur(25px);
+    }
+
+    .particle-3 {
+        width: 50px;
+        height: 50px;
+        background: radial-gradient(circle, rgba(234, 179, 8, 0.1) 0%, transparent 70%);
+        top: 50%;
+        left: 30%;
+        animation: particleFloat3 6s ease-in-out infinite;
+        filter: blur(15px);
+    }
+
+    /* === MAIN GLOW ORB === */
+    .glow-orb {
+        position: absolute;
+        top: -50%;
+        right: -15%;
+        width: 140px;
+        height: 140px;
+        background: radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, transparent 70%);
+        filter: blur(40px);
+        border-radius: 50%;
+        animation: glowPulse 4s ease-in-out infinite;
+        pointer-events: none;
+    }
+
+    /* === RESPONSIVE ADJUSTMENTS === */
+    @media (max-width: 600px) {
+        .fizz-bottle-3d img {
+            width: 80px !important;
+        }
+
+        .weekly-race-card {
+            padding: 15px 20px;
+            max-width: 100%;
+        }
+
+        .glow-orb {
+            width: 100px;
+            height: 100px;
+        }
+    }
+</style>
+{% endblock %}

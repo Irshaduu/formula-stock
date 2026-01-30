@@ -1,0 +1,34 @@
+{% extends 'consumables/base.html' %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <h2>Restock</h2>
+    <a href="{% url 'low_stock_list' %}" class="btn"
+        style="background-color: var(--accent-red); color: white; padding: 10px 15px; font-size: 0.9rem;">Low Stock
+        List</a>
+</div>
+
+{% for category in categories %}
+<div class="category-section">
+    <h3 class="category-title">{{ category.name }}</h3>
+    {% for item in category.items.all %}
+    <form method="post" action="{% url 'update_stock' item.id %}" class="item-card" style="display: flex; gap: 10px;">
+        {% csrf_token %}
+        <div class="item-info" style="flex-grow: 2;">
+            <div class="item-name">{{ item.name }}</div>
+            <div class="item-stock" style="color: {{ item.stock_status_color }};">
+                Avg: {{ item.average_stock }} | Cur: {{ item.current_stock }}
+            </div>
+        </div>
+        <div style="flex-grow: 0;">
+            <input type="number" name="current_stock" value="{{ item.current_stock }}"
+                style="width: 80px; text-align: center; margin: 0;">
+        </div>
+        <div>
+            <button type="submit" class="btn btn-edit">Save</button>
+        </div>
+    </form>
+    {% endfor %}
+</div>
+{% endfor %}
+{% endblock %}

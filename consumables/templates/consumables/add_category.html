@@ -1,0 +1,17 @@
+{% extends 'consumables/base.html' %}
+
+{% block content %}
+<div style="margin-bottom: 20px;">
+    <a href="{% url 'manage_categories' %}" style="color: var(--text-secondary);">&lsaquo; Back</a>
+</div>
+
+<h2>New Category</h2>
+
+<form method="post">
+    {% csrf_token %}
+    <label style="display: block; color: var(--text-secondary);">Category Name</label>
+    <input type="text" name="name" required autofocus>
+
+    <button type="submit" class="btn btn-primary" style="margin-top: 20px; width: 100%;">Create</button>
+</form>
+{% endblock %}

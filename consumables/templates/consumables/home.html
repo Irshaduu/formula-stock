@@ -1,0 +1,29 @@
+{% extends 'consumables/base.html' %}
+
+{% block content %}
+
+{% for category in categories %}
+<div class="category-section">
+    <h3 class="category-title">{{ category.name }}</h3>
+    {% for item in category.items.all %}
+    <div class="item-card">
+        <div class="item-info">
+            <div class="item-name">{{ item.name }}</div>
+        </div>
+        <div>
+            {% if item.current_stock > 0 %}
+            <a href="{% url 'take_item' item.id %}" class="btn btn-take" style="background-color: {{ item.stock_status_color }}; 
+               {% if item.stock_status_color == '#ef4444' or item.stock_status_color == '#eab308' %}color: black;{% endif %}
+               {% if item.stock_status_color == '#22c55e' %}color: black;{% endif %}">
+                Take
+            </a>
+            {% else %}
+            <button class="btn" style="background-color: #333; color: #777; cursor: not-allowed;" disabled>Stock
+                Out</button>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endfor %}
+{% endblock %}
