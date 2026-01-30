@@ -1,0 +1,18 @@
+{% extends 'consumables/base.html' %}
+
+{% block content %}
+<div style="margin-bottom: 20px;">
+    <a href="{% url 'category_detail' category.id %}" style="color: var(--text-secondary);">&lsaquo; Back</a>
+</div>
+
+<h2>Add SubCategory to {{ category.name }}</h2>
+
+<form method="post">
+    {% csrf_token %}
+
+    <label style="display: block; color: var(--text-secondary);">SubCategory Name</label>
+    <input type="text" name="name" required autofocus placeholder="e.g. Engine Oil">
+
+    <button type="submit" class="btn btn-primary" style="margin-top: 20px; width: 100%;">Create SubCategory</button>
+</form>
+{% endblock %}

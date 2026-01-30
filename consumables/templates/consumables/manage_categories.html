@@ -7,12 +7,26 @@
 </div>
 
 {% for category in categories %}
-<a href="{% url 'category_detail' category.id %}" class="item-card" style="text-decoration: none; color: inherit;">
-    <div class="item-info">
-        <div class="item-name">{{ category.name }}</div>
-        <div class="item-stock">{{ category.items.count }} items</div>
-    </div>
-    <div style="color: var(--text-secondary);">&rsaquo;</div>
-</a>
+<div class="item-card">
+    <a href="{% url 'category_detail' category.id %}"
+        style="text-decoration: none; color: inherit; flex-grow: 1; display: flex; align-items: center;">
+        <div class="item-info">
+            <div class="item-name">{{ category.name }}</div>
+            <div class="item-stock">{{ category.items.count }} items</div>
+        </div>
+    </a>
+
+    <details class="dropdown">
+        <summary>&#8942;</summary>
+        <div class="dropdown-menu">
+            <a href="{% url 'edit_category' category.id %}"
+                onclick="return confirm('Edit {{ category.name }}?')">Edit</a>
+            {% if request.user.is_superuser %}
+            <a href="{% url 'delete_category' category.id %}" class="text-danger"
+                onclick="return confirm('Delete category {{ category.name }}? All items inside will be lost!')">Delete</a>
+            {% endif %}
+        </div>
+    </details>
+</div>
 {% endfor %}
 {% endblock %}

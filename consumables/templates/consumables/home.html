@@ -1,29 +1,16 @@
 {% extends 'consumables/base.html' %}
 
 {% block content %}
-
-{% for category in categories %}
-<div class="category-section">
-    <h3 class="category-title">{{ category.name }}</h3>
-    {% for item in category.items.all %}
-    <div class="item-card">
-        <div class="item-info">
-            <div class="item-name">{{ item.name }}</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; margin-top: 20px;">
+    {% for category in categories %}
+    <a href="{% url 'view_category' category.id %}" style="text-decoration: none;">
+        <div
+            style="background: var(--card-bg); border-radius: 16px; padding: 30px 20px; text-align: center; border: 1px solid var(--border-color); box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: transform 0.2s, background 0.2s;">
+            <h3
+                style="color: var(--accent-green); margin: 0; font-size: 1.2rem; text-transform: uppercase; letter-spacing: 1px;">
+                {{ category.name }}</h3>
         </div>
-        <div>
-            {% if item.current_stock > 0 %}
-            <a href="{% url 'take_item' item.id %}" class="btn btn-take" style="background-color: {{ item.stock_status_color }}; 
-               {% if item.stock_status_color == '#ef4444' or item.stock_status_color == '#eab308' %}color: black;{% endif %}
-               {% if item.stock_status_color == '#22c55e' %}color: black;{% endif %}">
-                Take
-            </a>
-            {% else %}
-            <button class="btn" style="background-color: #333; color: #777; cursor: not-allowed;" disabled>Stock
-                Out</button>
-            {% endif %}
-        </div>
-    </div>
+    </a>
     {% endfor %}
 </div>
-{% endfor %}
 {% endblock %}

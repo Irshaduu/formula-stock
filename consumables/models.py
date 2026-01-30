@@ -12,8 +12,19 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
+class SubCategory(models.Model):
+    name = models.CharField(max_length=100)
+    category = models.ForeignKey(Category, related_name='subcategories', on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name_plural = "Sub Categories"
+
+    def __str__(self):
+        return f"{self.category.name} - {self.name}"
+
 class Item(models.Model):
     category = models.ForeignKey(Category, related_name='items', on_delete=models.CASCADE)
+    subcategory = models.ForeignKey(SubCategory, related_name='items', on_delete=models.SET_NULL, null=True, blank=True)
     name = models.CharField(max_length=200)
     average_stock = models.IntegerField(default=0, help_text="Ideal stock level for calculation")
     current_stock = models.IntegerField(default=0)

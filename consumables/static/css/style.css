@@ -117,6 +117,253 @@ a {
     margin-bottom: 40px;
 }
 
+/* 3-Dot Menu */
+/* 3-Dot Menu */
+.dropdown {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dropdown summary {
+    list-style: none;
+    /* Hide default triangle */
+    list-style-type: none;
+    cursor: pointer;
+    font-size: 1.5rem;
+    color: var(--text-secondary);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    /* Centers the text (dots) */
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    user-select: none;
+    outline: none;
+    /* Remove focus outline */
+}
+
+.dropdown summary:hover,
+.dropdown[open] summary {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+}
+
+/* Chrome/Safari marker hide */
+.dropdown summary::-webkit-details-marker {
+    display: none;
+}
+
+/* Remove default arrow if present */
+.dropdown summary::after {
+    content: none;
+}
+
+.dropdown-menu {
+    position: absolute;
+    right: 0;
+    top: 100%;
+    margin-top: 8px;
+    /* space below button */
+    background-color: #1e1e1e;
+    /* Solid dark color */
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
+    min-width: 150px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+    z-index: 9999;
+    padding: 6px;
+    animation: fadeIn 0.15s ease-out;
+    transform-origin: top right;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95) translateY(-5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+/* =========================================
+   Modern Dashboard Redesign
+   ========================================= */
+
+.hero-section {
+    position: relative;
+    padding: 20px 0 40px 0;
+    text-align: left;
+}
+
+.hero-title {
+    font-size: 2rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #fff 0%, #a0a0a0 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 5px;
+    letter-spacing: -1px;
+}
+
+.hero-subtitle {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+}
+
+/* Dashboard Grid */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 20px;
+}
+
+/* Premium Card */
+.dashboard-card {
+    position: relative;
+    background: rgba(30, 30, 30, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    /* Subtle glass border */
+    border-radius: 20px;
+    padding: 25px 20px;
+    height: 180px;
+    /* Tall cards */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    backdrop-filter: blur(10px);
+    overflow: hidden;
+    text-decoration: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.dashboard-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    border-color: rgba(255, 255, 255, 0.2);
+    background: rgba(40, 40, 40, 0.8);
+}
+
+.dashboard-card:active {
+    transform: scale(0.98);
+}
+
+/* Gradient Glow Overlay */
+.card-glow {
+    position: absolute;
+    top: -50px;
+    right: -50px;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    filter: blur(40px);
+    opacity: 0.3;
+    transition: opacity 0.3s;
+}
+
+.dashboard-card:hover .card-glow {
+    opacity: 0.5;
+}
+
+/* Icons / Typrography */
+.card-icon-box {
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: #fff;
+    margin-bottom: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.card-title-lg {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #fff;
+    margin: 0;
+    letter-spacing: 0.5px;
+    line-height: 1.2;
+    z-index: 2;
+}
+
+.card-arrow {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    color: rgba(255, 255, 255, 0.3);
+    font-size: 1.2rem;
+    transition: all 0.3s;
+}
+
+.dashboard-card:hover .card-arrow {
+    color: #fff;
+    transform: translateX(5px);
+}
+
+/* Color Themes */
+.theme-cyber {
+    background: #00f2ea;
+}
+
+.theme-fire {
+    background: #ff0055;
+}
+
+.theme-gold {
+    background: #ffd700;
+}
+
+.theme-neon {
+    background: #39ff14;
+}
+
+.theme-purple {
+    background: #bc13fe;
+}
+
+/* Text Gradients for Icons */
+.grad-text {
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Standard Components (Restored) */
+
+.dropdown-menu a {
+    display: block;
+    padding: 10px 12px;
+    color: #e0e0e0;
+    text-decoration: none;
+    font-size: 0.95rem;
+    border-radius: 6px;
+    margin-bottom: 2px;
+    transition: background 0.2s;
+}
+
+.dropdown-menu a:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+}
+
+.dropdown-menu a.text-danger {
+    color: #ff6b6b;
+}
+
+.dropdown-menu a.text-danger:hover {
+    background-color: rgba(255, 59, 48, 0.15);
+}
+
 .category-title {
     font-size: 1.5rem;
     border-bottom: 2px solid var(--border-color);

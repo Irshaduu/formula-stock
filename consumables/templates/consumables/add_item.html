@@ -10,6 +10,17 @@
 <form method="post">
     {% csrf_token %}
 
+    {% if subcategories %}
+    <label style="display: block; color: var(--text-secondary);">SubCategory (Optional)</label>
+    <select name="subcategory"
+        style="width: 100%; margin-bottom: 15px; padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--input-bg); color: var(--text-primary);">
+        <option value="">-- None (Direct in Category) --</option>
+        {% for sub in subcategories %}
+        <option value="{{ sub.id }}">{{ sub.name }}</option>
+        {% endfor %}
+    </select>
+    {% endif %}
+
     <label style="display: block; color: var(--text-secondary);">Item Name</label>
     <input type="text" name="name" required autofocus>
 

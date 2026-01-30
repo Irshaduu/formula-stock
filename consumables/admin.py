@@ -1,13 +1,14 @@
 from django.contrib import admin
-from .models import Category, Item, ConsumptionRecord
+from .models import Category, SubCategory, Item, ConsumptionRecord
 
 # Register your models here.
 admin.site.register(Category)
+admin.site.register(SubCategory)
 
 @admin.register(Item)
 class ItemAdmin(admin.ModelAdmin):
-    list_display = ('name', 'category', 'current_stock', 'average_stock', 'score')
-    list_filter = ('category',)
+    list_display = ('name', 'category', 'subcategory', 'current_stock', 'average_stock', 'score')
+    list_filter = ('category', 'subcategory')
     search_fields = ('name',)
 
 @admin.register(ConsumptionRecord)

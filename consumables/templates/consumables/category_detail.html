@@ -5,20 +5,80 @@
     <a href="{% url 'manage_categories' %}" style="color: var(--text-secondary);">&lsaquo; Back</a>
 </div>
 
-<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+<div
+    style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
     <h2>{{ category.name }}</h2>
-    <a href="{% url 'add_item' category.id %}" class="btn btn-primary">+ New Item</a>
+    <div style="display: flex; gap: 10px;">
+        <a href="{% url 'add_subcategory' category.id %}" class="btn"
+            style="background-color: var(--bg-secondary); border: 1px solid var(--border-color);">+ SubCategory</a>
+        <a href="{% url 'add_item' category.id %}" class="btn btn-primary">+ New Item</a>
+    </div>
 </div>
 
+<!-- 1. Direct Items -->
 {% for item in category.items.all %}
+{% if not item.subcategory %}
 <div class="item-card">
     <div class="item-info">
         <div class="item-name">{{ item.name }}</div>
         <div class="item-stock">Avg: {{ item.average_stock }} | Score: {{ item.score }}</div>
     </div>
     <div>
-        <a href="{% url 'edit_item' item.id %}" class="btn btn-edit">Edit</a>
+        <details class="dropdown">
+            <summary>&#8942;</summary>
+            <div class="dropdown-menu">
+                <a href="{% url 'edit_item' item.id %}" onclick="return confirm('Edit {{ item.name }}?')">Edit</a>
+                <a href="{% url 'delete_item' item.id %}" class="text-danger"
+                    onclick="return confirm('Delete item {{ item.name }}?')">Delete</a>
+            </div>
+        </details>
     </div>
 </div>
+{% endif %}
+{% endfor %}
+
+<!-- 2. SubCategories -->
+{% for sub in category.subcategories.all %}
+<div
+    style="margin-top: 25px; margin-bottom: 10px; padding-bottom: 5px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+    <h4
+        style="font-size: 1rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px; margin: 0;">
+        {{ sub.name }}
+    </h4>
+    <details class="dropdown">
+        <summary>&#8942;</summary>
+        <div class="dropdown-menu">
+            <a href="{% url 'edit_subcategory' sub.id %}" onclick="return confirm('Edit {{ sub.name }}?')">Edit</a>
+            {% if request.user.is_superuser %}
+            <a href="{% url 'delete_subcategory' sub.id %}" class="text-danger"
+                onclick="return confirm('Delete subcategory {{ sub.name }}? All items inside will be lost!')">Delete</a>
+            {% endif %}
+        </div>
+    </details>
+</div>
+
+{% for item in sub.items.all %}
+<div class="item-card">
+    <div class="item-info">
+        <div class="item-name">{{ item.name }}</div>
+        <div class="item-stock">Avg: {{ item.average_stock }} | Score: {{ item.score }}</div>
+    </div>
+    <div>
+        <details class="dropdown">
+            <summary>&#8942;</summary>
+            <div class="dropdown-menu">
+                <a href="{% url 'edit_item' item.id %}" onclick="return confirm('Edit {{ item.name }}?')">Edit</a>
+                {% if request.user.is_superuser %}
+                <a href="{% url 'delete_item' item.id %}" class="text-danger"
+                    onclick="return confirm('Delete item {{ item.name }}?')">Delete</a>
+                {% endif %}
+            </div>
+        </details>
+    </div>
+</div>
+{% empty %}
+<div style="color: var(--text-secondary); font-size: 0.8rem; font-style: italic; padding: 10px;">No items in this
+    subcategory yet.</div>
+{% endfor %}
 {% endfor %}
 {% endblock %}

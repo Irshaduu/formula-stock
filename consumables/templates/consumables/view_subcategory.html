@@ -1,0 +1,35 @@
+{% extends 'consumables/base.html' %}
+
+{% block content %}
+<div style="margin-bottom: 15px;">
+    <a href="{% url 'view_category' subcategory.category.id %}"
+        style="color: var(--text-secondary); text-decoration: none;">&lsaquo; Back to {{ subcategory.category.name
+        }}</a>
+</div>
+<h2 style="margin-bottom: 20px; color: var(--text-primary);">{{ subcategory.name }}</h2>
+
+<div class="item-list">
+    {% for item in items %}
+    <div class="item-card">
+        <div class="item-info">
+            <div class="item-name">{{ item.name }}</div>
+        </div>
+        <div>
+            {% if item.current_stock > 0 %}
+            <a href="{% url 'take_item' item.id %}" class="btn btn-take" style="background-color: {{ item.stock_status_color }}; 
+               {% if item.stock_status_color == '#ef4444' or item.stock_status_color == '#eab308' %}color: black;{% endif %}
+               {% if item.stock_status_color == '#22c55e' %}color: black;{% endif %}">
+                Take
+            </a>
+            {% else %}
+            <button class="btn" style="background-color: #333; color: #777; cursor: not-allowed;" disabled>Out</button>
+            {% endif %}
+        </div>
+    </div>
+    {% empty %}
+    <div style="text-align: center; color: var(--text-secondary); padding: 40px;">
+        No items found in this subcategory.
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

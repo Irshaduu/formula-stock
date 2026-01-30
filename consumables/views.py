@@ -6,7 +6,7 @@ from django.utils import timezone
 from datetime import timedelta
 from django.db.models import Sum, F, Q
 from django.contrib.auth.models import User
-from .models import Category, Item, ConsumptionRecord
+from .models import Category, SubCategory, Item, ConsumptionRecord
 from django.contrib import messages
 
 # Authentication
@@ -28,8 +28,31 @@ def logout_view(request):
 # Core Navigation
 @login_required
 def home(request):
-    categories = Category.objects.prefetch_related('items').all()
+    # Only fetch categories to display main menu
+    categories = Category.objects.all()
     return render(request, 'consumables/home.html', {'categories': categories})
+
+@login_required
+def view_category(request, category_id):
+    category = get_object_or_404(Category.objects.prefetch_related('items', 'subcategories'), pk=category_id)
+    subcategories = category.subcategories.all()
+    # Direct items are those without a subcategory
+    direct_items = category.items.filter(subcategory__isnull=True)
+    
+    return render(request, 'consumables/view_category.html', {
+        'category': category,
+        'subcategories': subcategories,
+        'direct_items': direct_items
+    })
+
+@login_required
+def view_subcategory(request, subcategory_id):
+    subcategory = get_object_or_404(SubCategory, pk=subcategory_id)
+    items = subcategory.items.all()
+    return render(request, 'consumables/view_subcategory.html', {
+        'subcategory': subcategory,
+        'items': items
+    })
 
 @login_required
 def take_item(request, item_id):
@@ -106,6 +129,8 @@ def update_stock(request, item_id):
 
 # Management
 @login_required
+# Manage Categories
+@login_required
 def manage_categories(request):
     categories = Category.objects.all()
     return render(request, 'consumables/manage_categories.html', {'categories': categories})
@@ -120,39 +145,129 @@ def add_category(request):
     return render(request, 'consumables/add_category.html')
 
 @login_required
-def category_detail(request, category_id):
+def edit_category(request, category_id):
     category = get_object_or_404(Category, pk=category_id)
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        if name:
+            category.name = name
+            category.save()
+            messages.success(request, f"Category updated to '{name}'")
+            return redirect('manage_categories')
+    # Reuse add_category template or create new? Let's use a generic simple form 
+    # But user wants 3-dot menu. This view handles the POST.
+    # We need a template for editing category.
+    return render(request, 'consumables/edit_category.html', {'category': category})
+
+@login_required
+def delete_category(request, category_id):
+    if not request.user.is_superuser:
+        messages.error(request, "Only admins can delete categories.")
+        return redirect('manage_categories')
+    category = get_object_or_404(Category, pk=category_id)
+    name = category.name
+    category.delete()
+    messages.success(request, f"Category '{name}' deleted.")
+    return redirect('manage_categories')
+
+
+@login_required
+def category_detail(request, category_id):
+    category = get_object_or_404(Category.objects.prefetch_related('items', 'subcategories', 'subcategories__items'), pk=category_id)
     return render(request, 'consumables/category_detail.html', {'category': category})
+
+@login_required
+def add_subcategory(request, category_id):
+    category = get_object_or_404(Category, pk=category_id)
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        if name:
+            SubCategory.objects.create(name=name, category=category)
+            messages.success(request, f"SubCategory '{name}' created.")
+            return redirect('category_detail', category_id=category.id)
+    return render(request, 'consumables/add_subcategory.html', {'category': category})
+
+@login_required
+def edit_subcategory(request, subcategory_id):
+    subcategory = get_object_or_404(SubCategory, pk=subcategory_id)
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        if name:
+            subcategory.name = name
+            subcategory.save()
+            messages.success(request, f"SubCategory updated.")
+            return redirect('category_detail', category_id=subcategory.category.id)
+    return render(request, 'consumables/edit_subcategory.html', {'subcategory': subcategory})
+
+@login_required
+def delete_subcategory(request, subcategory_id):
+    if not request.user.is_superuser:
+        messages.error(request, "Only admins can delete subcategories.")
+        # Find category to redirect to
+        subcategory = get_object_or_404(SubCategory, pk=subcategory_id)
+        return redirect('category_detail', category_id=subcategory.category.id)
+        
+    subcategory = get_object_or_404(SubCategory, pk=subcategory_id)
+    cat_id = subcategory.category.id
+    subcategory.delete()
+    messages.success(request, "SubCategory deleted.")
+    return redirect('category_detail', category_id=cat_id)
 
 @login_required
 def add_item(request, category_id):
     category = get_object_or_404(Category, pk=category_id)
+    subcategories = category.subcategories.all()
+    
     if request.method == 'POST':
         name = request.POST.get('name')
         avg_stock = int(request.POST.get('average_stock', 0))
         cur_stock = int(request.POST.get('current_stock', 0))
         score = int(request.POST.get('score', 1))
+        
+        subcategory_id = request.POST.get('subcategory')
+        subcategory = None
+        if subcategory_id:
+            subcategory = get_object_or_404(SubCategory, pk=subcategory_id)
+
         Item.objects.create(
             category=category,
+            subcategory=subcategory,
             name=name,
             average_stock=avg_stock,
             current_stock=cur_stock,
             score=score
         )
         return redirect('category_detail', category_id=category.id)
-    return render(request, 'consumables/add_item.html', {'category': category})
+    return render(request, 'consumables/add_item.html', {'category': category, 'subcategories': subcategories})
 
 @login_required
 def edit_item(request, item_id):
     item = get_object_or_404(Item, pk=item_id)
+    subcategories = item.category.subcategories.all()
+    
     if request.method == 'POST':
         item.name = request.POST.get('name')
         item.average_stock = int(request.POST.get('average_stock', 0))
         item.current_stock = int(request.POST.get('current_stock', 0))
         item.score = int(request.POST.get('score', 1))
+        
+        subcategory_id = request.POST.get('subcategory')
+        item.subcategory = None # Default to None
+        if subcategory_id:
+            item.subcategory = get_object_or_404(SubCategory, pk=subcategory_id)
+            
         item.save()
         return redirect('category_detail', category_id=item.category.id)
-    return render(request, 'consumables/edit_item.html', {'item': item})
+    return render(request, 'consumables/edit_item.html', {'item': item, 'subcategories': subcategories})
+
+@login_required
+def delete_item(request, item_id):
+    # User requested all users can delete items
+    item = get_object_or_404(Item, pk=item_id)
+    cat_id = item.category.id
+    item.delete()
+    messages.success(request, "Item deleted.")
+    return redirect('category_detail', category_id=cat_id)
 
 # Profile & Leaderboard
 @login_required

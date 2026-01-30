@@ -1,0 +1,58 @@
+{% extends 'consumables/base.html' %}
+
+{% block content %}
+<div style="margin-bottom: 15px;">
+    <a href="{% url 'home' %}" style="color: var(--text-secondary); text-decoration: none;">&lsaquo; Back to Home</a>
+</div>
+<h2 style="margin-bottom: 20px; color: var(--text-primary);">{{ category.name }}</h2>
+
+<!-- SubCategories Grid -->
+{% if subcategories %}
+<div
+    style="display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 15px; margin-bottom: 30px;">
+    {% for sub in subcategories %}
+    <a href="{% url 'view_subcategory' sub.id %}" style="text-decoration: none;">
+        <div
+            style="background: var(--bg-secondary); border-radius: 12px; padding: 20px 15px; text-align: center; border: 1px solid var(--border-color); box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+            <h4 style="color: var(--text-primary); margin: 0; font-size: 1rem;">{{ sub.name }}</h4>
+        </div>
+    </a>
+    {% endfor %}
+</div>
+{% endif %}
+
+<!-- Direct Items List -->
+{% if direct_items %}
+{% if subcategories %}
+<h3
+    style="font-size: 1rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px;">
+    Other Items</h3>
+{% endif %}
+
+{% for item in direct_items %}
+<div class="item-card">
+    <div class="item-info">
+        <div class="item-name">{{ item.name }}</div>
+    </div>
+    <div>
+        {% if item.current_stock > 0 %}
+        <a href="{% url 'take_item' item.id %}" class="btn btn-take" style="background-color: {{ item.stock_status_color }}; 
+               {% if item.stock_status_color == '#ef4444' or item.stock_status_color == '#eab308' %}color: black;{% endif %}
+               {% if item.stock_status_color == '#22c55e' %}color: black;{% endif %}">
+            Take
+        </a>
+        {% else %}
+        <button class="btn" style="background-color: #333; color: #777; cursor: not-allowed;" disabled>Out</button>
+        {% endif %}
+    </div>
+</div>
+{% endfor %}
+{% endif %}
+
+{% if not subcategories and not direct_items %}
+<div style="text-align: center; color: var(--text-secondary); padding: 40px;">
+    No items found in this category.
+</div>
+{% endif %}
+
+{% endblock %}

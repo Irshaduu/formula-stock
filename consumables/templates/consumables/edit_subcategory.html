@@ -1,0 +1,27 @@
+{% extends 'consumables/base.html' %}
+
+{% block content %}
+<div style="margin-bottom: 20px;">
+    <a href="{% url 'category_detail' subcategory.category.id %}" style="color: var(--text-secondary);">&lsaquo;
+        Back</a>
+</div>
+
+<h2>Edit SubCategory</h2>
+
+<form method="post">
+    {% csrf_token %}
+    <label style="display: block; color: var(--text-secondary);">SubCategory Name</label>
+    <input type="text" name="name" value="{{ subcategory.name }}" required autofocus>
+    <button type="submit" class="btn btn-primary" style="margin-top: 20px; width: 100%;">Save Changes</button>
+</form>
+
+<div style="margin-top: 30px; border-top: 1px solid var(--border-color); padding-top: 20px;">
+    <h3 style="color: #ef4444; font-size: 1rem;">Danger Zone</h3>
+    <p style="color: var(--text-secondary); font-size: 0.9rem;">Deleting this subcategory will remove ALL items inside
+        it.</p>
+    <a href="{% url 'delete_subcategory' subcategory.id %}" class="btn"
+        style="background-color: #ef4444; color: white; width: 100%; text-align: center; margin-top: 10px;"
+        onclick="return confirm('Are you sure you want to delete this SubCategory? ITEMS WILL BE LOST!')">Delete
+        SubCategory</a>
+</div>
+{% endblock %}
