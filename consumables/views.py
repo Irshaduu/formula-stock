@@ -30,7 +30,33 @@ def logout_view(request):
 def home(request):
     # Only fetch categories to display main menu
     categories = Category.objects.all()
-    return render(request, 'consumables/home.html', {'categories': categories})
+    
+    mvp_data = None
+    today = timezone.localdate()
+    
+    # 4 is Friday (Monday is 0)
+    if today.weekday() == 4:
+        # It's Friday! Calculate MVP of the last week (Last Friday to Yesterday/Thursday)
+        last_friday = today - timedelta(days=7)
+        yesterday = today - timedelta(days=1)
+        
+        # Aggregate scores
+        winner = ConsumptionRecord.objects.filter(
+            date__range=[last_friday, yesterday]
+        ).values('user__username', 'user__first_name').annotate(
+            total_score=Sum(F('quantity') * F('item__score'))
+        ).order_by('-total_score').first()
+        
+        if winner:
+            mvp_data = {
+                'name': winner['user__first_name'] or winner['user__username'],
+                'score': winner['total_score']
+            }
+
+    return render(request, 'consumables/home.html', {
+        'categories': categories,
+        'weekly_mvp': mvp_data
+    })
 
 @login_required
 def view_category(request, category_id):

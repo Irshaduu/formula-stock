@@ -1,6 +1,25 @@
 {% extends 'consumables/base.html' %}
 
 {% block content %}
+<!-- Weekly MVP Banner (Only shows on Fridays) -->
+{% if weekly_mvp %}
+<div
+    style="background: linear-gradient(135deg, #ffd700 0%, #ffcc00 100%); color: black; padding: 20px; border-radius: 12px; margin-bottom: 25px; text-align: center; box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3); animation: slideDown 0.5s ease-out;">
+    <h2 style="margin: 0; font-size: 1.5rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;">
+        🏆 Weekly MVP 🏆
+    </h2>
+    <div style="font-size: 1.8rem; font-weight: bold; margin: 10px 0;">
+        {{ weekly_mvp.name }}
+    </div>
+    <div style="font-size: 1rem; font-weight: 600; opacity: 0.9;">
+        Total Score: {{ weekly_mvp.score }} Credits
+    </div>
+    <div style="margin-top: 10px; font-size: 0.8rem; border-top: 1px solid rgba(0,0,0,0.1); padding-top: 8px;">
+        *Performance for last week (Fri-Thu). Scores valid until tomorrow!
+    </div>
+</div>
+{% endif %}
+
 <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; margin-top: 20px;">
     {% for category in categories %}
     <a href="{% url 'view_category' category.id %}" style="text-decoration: none;">
