@@ -4,11 +4,9 @@
 *.pyo
 *.pyd
 __pycache__/
-*.db
 email_credentials.py
 
 # Django
-db.sqlite3
 /media
 /static_root
 
