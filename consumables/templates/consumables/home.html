@@ -1,35 +1,352 @@
 {% extends 'consumables/base.html' %}
 
 {% block content %}
-<!-- Weekly MVP Banner (Only shows on Fridays) -->
-{% if weekly_mvp %}
-<div
-    style="background: linear-gradient(135deg, #ffd700 0%, #ffcc00 100%); color: black; padding: 20px; border-radius: 12px; margin-bottom: 25px; text-align: center; box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3); animation: slideDown 0.5s ease-out;">
-    <h2 style="margin: 0; font-size: 1.5rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;">
-        🏆 Weekly MVP 🏆
-    </h2>
-    <div style="font-size: 1.8rem; font-weight: bold; margin: 10px 0;">
-        {{ weekly_mvp.name }}
-    </div>
-    <div style="font-size: 1rem; font-weight: 600; opacity: 0.9;">
-        Total Score: {{ weekly_mvp.score }} Credits
-    </div>
-    <div style="margin-top: 10px; font-size: 0.8rem; border-top: 1px solid rgba(0,0,0,0.1); padding-top: 8px;">
-        *Performance for last week (Fri-Thu). Scores valid until tomorrow!
-    </div>
-</div>
-{% endif %}
+<style>
+    :root {
+        --glass-bg: rgba(255, 255, 255, 0.05);
+        --glass-border: rgba(255, 255, 255, 0.18);
+        --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        --oil-color: #d4a017;
+        --coolant-color: #ff69b4;  /* Hot pink */
+        --water-color: #4facfe;
+    }
 
-<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; margin-top: 20px;">
+    .category-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 20px;
+        padding: 20px 10px;
+        margin-top: 20px;
+        perspective: 1000px;
+    }
+
+    .category-link {
+        text-decoration: none;
+        display: block;
+        -webkit-tap-highlight-color: transparent;
+        outline: none;
+    }
+
+    /* BASE GLASS CARD */
+    .category-card {
+        position: relative;
+        background: var(--glass-bg);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid var(--glass-border);
+        border-radius: 20px;
+        padding: 30px 15px;
+        text-align: center;
+        overflow: hidden;
+        box-shadow: var(--glass-shadow), inset 0 0 20px rgba(255,255,255,0.05);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        opacity: 0;
+        transform: translateY(20px) rotateX(10deg);
+        animation: fadeUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        height: 120px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Glass highlight overlay */
+    .category-card::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+        transition: left 0.5s;
+        pointer-events: none;
+    }
+
+    .category-link:hover .category-card::after {
+        left: 100%;
+    }
+
+    .category-title {
+        color: #fff;
+        margin: 0;
+        font-size: 1.1rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        position: relative;
+        z-index: 10;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        transition: transform 0.3s;
+    }
+
+    .category-link:hover .category-title {
+        transform: scale(1.05);
+    }
+
+    /* INTERACTIONS */
+    .category-link:hover .category-card {
+        transform: translateY(-5px) rotateX(5deg);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.4), inset 0 0 30px rgba(255,255,255,0.1);
+        border-color: rgba(255,255,255,0.4);
+    }
+
+    .category-link:active .category-card {
+        transform: scale(0.95) rotateX(0deg);
+        transition: transform 0.1s;
+    }
+
+    /* OIL - Thick, Viscous Half-Fill */
+    .category-oil::before {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 50%;
+        background: linear-gradient(180deg, rgba(212, 160, 23, 0.8), rgba(139, 90, 43, 0.9));
+        border-radius: 0 0 19px 19px;
+        box-shadow: inset 0 5px 15px rgba(0,0,0,0.3);
+        animation: oilWave 3s ease-in-out infinite;
+    }
+
+    .category-oil .liquid-surface {
+        position: absolute;
+        bottom: 50%;
+        left: 0;
+        right: 0;
+        height: 10px;
+        background: rgba(212, 160, 23, 0.9);
+        filter: blur(2px);
+        animation: surfaceTension 3s ease-in-out infinite;
+    }
+
+    @keyframes oilWave {
+        0%, 100% { transform: translateY(0) skewX(0deg); }
+        50% { transform: translateY(-3px) skewX(2deg); }
+    }
+
+    @keyframes surfaceTension {
+        0%, 100% { transform: scaleY(1); opacity: 0.8; }
+        50% { transform: scaleY(1.2); opacity: 1; }
+    }
+
+    /* COOLANT - Pink Bubbly, Floating Liquid */
+    .category-coolant::before {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 50%;
+        background: linear-gradient(180deg, rgba(255, 105, 180, 0.7), rgba(255, 20, 147, 0.85));
+        border-radius: 0 0 19px 19px;
+        box-shadow: inset 0 5px 20px rgba(255, 20, 147, 0.3);
+        animation: coolantFloat 4s ease-in-out infinite;
+    }
+
+    .category-coolant .bubble {
+        position: absolute;
+        background: rgba(255, 255, 255, 0.8);
+        border-radius: 50%;
+        box-shadow: 0 0 10px rgba(255, 105, 180, 0.6);
+        animation: rise 3s infinite;
+        bottom: 10%;
+    }
+
+    .category-coolant .bubble:nth-child(1) { width: 8px; height: 8px; left: 20%; animation-delay: 0s; }
+    .category-coolant .bubble:nth-child(2) { width: 6px; height: 6px; left: 50%; animation-delay: 1s; }
+    .category-coolant .bubble:nth-child(3) { width: 10px; height: 10px; left: 80%; animation-delay: 2s; }
+
+    @keyframes coolantFloat {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-5px); }
+    }
+
+    @keyframes rise {
+        0% { transform: translateY(0) scale(1); opacity: 0; }
+        10% { opacity: 1; }
+        100% { transform: translateY(-100px) scale(0.5); opacity: 0; }
+    }
+
+    /* CONSUMABLES - Wet Water Droplets */
+    .category-consumables {
+        background: linear-gradient(135deg, rgba(79, 172, 254, 0.1), rgba(0, 242, 254, 0.1));
+    }
+
+    .category-consumables::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-image: 
+            radial-gradient(circle at 20% 30%, rgba(255,255,255,0.8) 2px, transparent 2px),
+            radial-gradient(circle at 70% 20%, rgba(255,255,255,0.6) 3px, transparent 3px),
+            radial-gradient(circle at 40% 70%, rgba(255,255,255,0.9) 2px, transparent 2px),
+            radial-gradient(circle at 85% 60%, rgba(255,255,255,0.7) 4px, transparent 4px),
+            radial-gradient(circle at 15% 80%, rgba(255,255,255,0.5) 3px, transparent 3px);
+        animation: dropletShine 4s ease-in-out infinite;
+    }
+
+    .category-consumables::after {
+        content: '';
+        position: absolute;
+        top: 10%;
+        left: 10%;
+        right: 10%;
+        bottom: 10%;
+        background: linear-gradient(180deg, transparent 0%, rgba(79, 172, 254, 0.1) 100%);
+        filter: blur(1px);
+        animation: waterStreaks 5s linear infinite;
+    }
+
+    @keyframes dropletShine {
+        0%, 100% { opacity: 0.6; transform: translateY(0); }
+        50% { opacity: 1; transform: translateY(-2px); }
+    }
+
+    @keyframes waterStreaks {
+        0% { transform: translateY(-100%); opacity: 0; }
+        50% { opacity: 0.5; }
+        100% { transform: translateY(100%); opacity: 0; }
+    }
+
+    /* FILTERS - Particle Filtering Effect */
+    .category-filters::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-image: 
+            linear-gradient(90deg, transparent 48%, rgba(255,255,255,0.1) 49%, rgba(255,255,255,0.1) 51%, transparent 52%),
+            linear-gradient(0deg, transparent 48%, rgba(255,255,255,0.1) 49%, rgba(255,255,255,0.1) 51%, transparent 52%);
+        background-size: 20px 20px;
+        opacity: 0.5;
+    }
+
+    .category-filters .particle {
+        position: absolute;
+        width: 4px;
+        height: 4px;
+        background: rgba(255,255,255,0.8);
+        border-radius: 50%;
+        animation: filterFlow 3s linear infinite;
+    }
+
+    .category-filters .particle:nth-child(1) { left: 20%; animation-delay: 0s; top: -10%; }
+    .category-filters .particle:nth-child(2) { left: 40%; animation-delay: 0.5s; top: -10%; }
+    .category-filters .particle:nth-child(3) { left: 60%; animation-delay: 1s; top: -10%; }
+    .category-filters .particle:nth-child(4) { left: 80%; animation-delay: 1.5s; top: -10%; }
+
+    @keyframes filterFlow {
+        0% { transform: translateY(0) translateX(0); opacity: 1; }
+        50% { transform: translateY(60px) translateX(5px); opacity: 0.5; }
+        100% { transform: translateY(130px) translateX(0); opacity: 0; }
+    }
+
+    /* NEW CATEGORIES - Comment Bubble Glass */
+    .category-new::before,
+    .category-default::before {
+        content: '';
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        width: 30px;
+        height: 30px;
+        background: rgba(255,255,255,0.15);
+        border-radius: 50%;
+        border: 2px solid rgba(255,255,255,0.3);
+        box-shadow: 0 0 15px rgba(255,255,255,0.2);
+        animation: pulseComment 2s ease-in-out infinite;
+    }
+
+    .category-new::after {
+        content: '+';
+        position: absolute;
+        bottom: 15px;
+        right: 19px;
+        color: rgba(255,255,255,0.8);
+        font-size: 1.2rem;
+        font-weight: bold;
+        animation: pulseComment 2s ease-in-out infinite;
+    }
+
+    @keyframes pulseComment {
+        0%, 100% { transform: scale(1); opacity: 0.6; }
+        50% { transform: scale(1.1); opacity: 1; }
+    }
+
+    /* Entrance Animation */
+    @keyframes fadeUp {
+        to {
+            opacity: 1;
+            transform: translateY(0) rotateX(0deg);
+        }
+    }
+
+    /* Mobile Optimization */
+    @media (max-width: 768px) {
+        .category-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        
+        .category-card {
+            height: 100px;
+            padding: 20px 10px;
+        }
+        
+        .category-title {
+            font-size: 0.95rem;
+        }
+    }
+
+    /* Dark mode adjustments if base.html uses dark theme */
+    @media (prefers-color-scheme: dark) {
+        .category-card {
+            background: rgba(30, 30, 30, 0.4);
+        }
+    }
+</style>
+
+<div class="category-grid">
     {% for category in categories %}
-    <a href="{% url 'view_category' category.id %}" style="text-decoration: none;">
-        <div
-            style="background: var(--card-bg); border-radius: 16px; padding: 30px 20px; text-align: center; border: 1px solid var(--border-color); box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: transform 0.2s, background 0.2s;">
-            <h3
-                style="color: var(--accent-green); margin: 0; font-size: 1.2rem; text-transform: uppercase; letter-spacing: 1px;">
-                {{ category.name }}</h3>
-        </div>
-    </a>
+        {% with category_name=category.name|lower %}
+        <a href="{% url 'view_category' category.id %}" class="category-link">
+            <div class="category-card category-{{ category_name|slugify }} 
+                        {% if category_name == 'oil' %}category-oil{% endif %}
+                        {% if category_name == 'coolant' %}category-coolant{% endif %}
+                        {% if category_name == 'consumables' %}category-consumables{% endif %}
+                        {% if category_name == 'filters' %}category-filters{% endif %}
+                        {% if 'new' in category_name %}category-new{% endif %}"
+                 style="animation-delay: {{ forloop.counter0|add:0 }}00ms;">
+                
+                <!-- Dynamic elements for specific categories -->
+                {% if category_name == 'oil' %}
+                    <div class="liquid-surface"></div>
+                {% endif %}
+                
+                {% if category_name == 'coolant' %}
+                    <div class="bubble"></div>
+                    <div class="bubble"></div>
+                    <div class="bubble"></div>
+                {% endif %}
+                
+                {% if category_name == 'filters' %}
+                    <div class="particle"></div>
+                    <div class="particle"></div>
+                    <div class="particle"></div>
+                    <div class="particle"></div>
+                {% endif %}
+                
+                <h3 class="category-title">{{ category.name }}</h3>
+            </div>
+        </a>
+        {% endwith %}
     {% endfor %}
 </div>
+
 {% endblock %}
