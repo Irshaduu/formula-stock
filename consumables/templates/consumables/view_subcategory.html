@@ -12,7 +12,7 @@
         </div>
         <div>
             {% if item.current_stock > 0 %}
-            <a href="{% url 'take_item' item.id %}" class="btn btn-take" style="background-color: {{ item.stock_status_color }}; 
+            <a href="{% url 'take_item' item.id %}?next={{ request.path }}" class="btn btn-take" style="background-color: {{ item.stock_status_color }}; 
                {% if item.stock_status_color == '#ef4444' or item.stock_status_color == '#eab308' %}color: black;{% endif %}
                {% if item.stock_status_color == '#22c55e' %}color: black;{% endif %}">
                 Take

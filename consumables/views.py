@@ -57,6 +57,10 @@ def view_subcategory(request, subcategory_id):
 @login_required
 def take_item(request, item_id):
     item = get_object_or_404(Item, pk=item_id)
+    
+    # Get redirect URL from POST (priority) or GET
+    next_url = request.POST.get('next') or request.GET.get('next') or 'home'
+    
     if request.method == 'POST':
         qty = int(request.POST.get('quantity', 0))
         if qty > 0:
@@ -71,10 +75,12 @@ def take_item(request, item_id):
                 messages.success(request, f"Took {qty} {item.name}")
             else:
                  messages.error(request, f"Cannot take {qty}! Only {item.current_stock} available.")
-        return redirect('home')
-    # If GET, show confirmation page/modal? 
-    # The UI flow says "When press Take button next page It will ask Quantity... |Confirm|"
-    return render(request, 'consumables/take_item.html', {'item': item})
+        
+        # Safe redirect (prevent open redirection vulnerabilities ideally, but keeping simple for now as per internal app)
+        return redirect(next_url)
+    
+    # If GET, show confirmation page
+    return render(request, 'consumables/take_item.html', {'item': item, 'next_url': next_url})
 
 @login_required
 def today(request):
