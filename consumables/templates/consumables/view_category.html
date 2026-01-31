@@ -1,7 +1,15 @@
 {% extends 'consumables/base.html' %}
 
 {% block content %}
-<h2 style="margin-bottom: 20px; color: var(--text-primary);">{{ category.name }}</h2>
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; gap: 15px;">
+    <h2 style="margin: 0; color: var(--text-primary); white-space: nowrap;">{{ category.name }}</h2>
+
+    {% if direct_items %}
+    <div class="search-container" style="flex-grow: 1; margin: 0; padding: 0; max-width: 300px;">
+        <input type="text" id="itemSearch" class="tiny-search" placeholder="Search..." style="margin: 0;">
+    </div>
+    {% endif %}
+</div>
 
 <!-- SubCategories Grid -->
 {% if subcategories %}
@@ -18,7 +26,27 @@
 </div>
 {% endif %}
 
-<!-- Direct Items List -->
+
+<!-- Search Filter Script -->
+{% if direct_items %}
+<script>
+    document.getElementById('itemSearch').addEventListener('keyup', function () {
+        let filter = this.value.toLowerCase();
+        let items = document.querySelectorAll('.item-card');
+
+        items.forEach(card => {
+            let text = card.textContent.toLowerCase();
+            if (text.includes(filter)) {
+                card.style.display = "";
+            } else {
+                card.style.display = "none";
+            }
+        });
+    });
+</script>
+{% endif %}
+
+
 {% if direct_items %}
 {% if subcategories %}
 <h3

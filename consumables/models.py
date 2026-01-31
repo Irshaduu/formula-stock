@@ -30,6 +30,19 @@ class Item(models.Model):
     current_stock = models.IntegerField(default=0)
     score = models.IntegerField(default=1, help_text="Credits earned per unit taken")
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['category', 'name'], 
+                condition=models.Q(subcategory__isnull=True), 
+                name='unique_direct_item_idx'
+            ),
+            models.UniqueConstraint(
+                fields=['subcategory', 'name'], 
+                name='unique_subcategory_item_idx'
+            )
+        ]
+
     def __str__(self):
         return self.name
 
