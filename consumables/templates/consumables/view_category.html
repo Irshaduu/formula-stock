@@ -27,7 +27,8 @@
 {% endif %}
 
 {% for item in direct_items %}
-<div class="item-card">
+<div class="item-card"
+    style="background: linear-gradient(90deg, var(--card-bg) {{ item.stock_percentage|floatformat:0 }}%, transparent {{ item.stock_percentage|floatformat:0 }}%); border-color: rgba(255,255,255,0.1);">
     <div class="item-info">
         <div class="item-name">{{ item.name }}</div>
     </div>
