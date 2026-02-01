@@ -1,42 +1,97 @@
 {% extends 'consumables/base.html' %}
 
 {% block content %}
-<h2 style="border-bottom: 1px solid var(--border-color); padding-bottom: 10px; margin-bottom: 20px;">Today's
-    Consumptions</h2>
+<h2 style="
+    font-size: 1.1rem;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 6px;
+    margin-bottom: 12px;
+">
+    Today’s Consumptions
+</h2>
 
 {% if records %}
 {% for record in records %}
-<div class="item-card" style="align-items: flex-start;">
-    <div class="item-info" style="flex: 1;">
+<div class="item-card" style="
+    padding: 8px 10px;
+    margin-bottom: 8px;
+    align-items: center;
+">
 
-        <!-- Staff Name Highlight -->
-        <div style="font-size: 0.85rem; color: var(--accent-yellow); margin-bottom: 4px; font-weight: bold;">
+    <div class="item-info" style="flex:1; min-width:0;">
+
+        <!-- Staff Name -->
+        <div style="
+            font-size: 0.7rem;
+            color: var(--accent-yellow);
+            font-weight: 600;
+            line-height: 1;
+            margin-bottom: 2px;
+        ">
             {{ record.user.first_name|default:record.user.username }}
         </div>
 
-        <div class="item-name" style="font-size: 1.1rem;">
-            {{ record.item.name }}
-            <span
-                style="font-size: 1rem; color: var(--text-primary); margin-left: 8px; background: rgba(255, 255, 255, 0.1); padding: 2px 8px; border-radius: 4px;">
-                x {{ record.quantity }}
+        <!-- Item + Qty -->
+        <div style="
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        ">
+            <span style="overflow:hidden; text-overflow:ellipsis;">
+                {{ record.item.name }}
+            </span>
+
+            <span style="
+                font-size: 0.75rem;
+                padding: 1px 6px;
+                border-radius: 4px;
+                background: rgba(255,255,255,0.12);
+                flex-shrink: 0;
+            ">
+                ×{{ record.quantity }}
             </span>
         </div>
 
-        <div class="item-stock" style="margin-top: 5px;">
+        <!-- Time -->
+        <div style="
+            font-size: 0.65rem;
+            color: var(--text-secondary);
+            margin-top: 1px;
+        ">
             {{ record.timestamp|time:"h:i A" }}
         </div>
     </div>
 
-    <div style="margin-left: 15px; display: flex; align-items: center;">
-        {% if request.user == record.user %}
-        <a href="{% url 'delete_consumption' record.id %}" class="btn btn-danger"
-            style="padding: 5px 10px; font-size: 0.8rem;"
-            onclick="return confirm('Undo this? Stock will be restored.')">Undo</a>
-        {% endif %}
-    </div>
+    <!-- Undo -->
+    {% if request.user == record.user %}
+    <a href="{% url 'delete_consumption' record.id %}"
+       class="btn btn-danger"
+       style="
+           padding: 4px 6px;
+           font-size: 0.65rem;
+           margin-left: 6px;
+           line-height: 1;
+       "
+       onclick="return confirm('Undo this? Stock will be restored.')">
+        Undo
+    </a>
+    {% endif %}
+
 </div>
 {% endfor %}
 {% else %}
-<p style="text-align: center; color: var(--text-secondary); margin-top: 50px;">Nothing taken today yet.</p>
+<p style="
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-top: 40px;
+">
+    Nothing taken today yet.
+</p>
 {% endif %}
 {% endblock %}
