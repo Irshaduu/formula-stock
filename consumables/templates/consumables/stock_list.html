@@ -101,6 +101,14 @@
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+        cursor: pointer;
+        /* Indication it's interactive */
+    }
+
+    .item-name.expanded {
+        white-space: normal;
+        overflow: visible;
+        word-break: break-word;
     }
 
     .item-stock {
@@ -209,7 +217,7 @@
             {% csrf_token %}
 
             <div class="item-info">
-                <div class="item-name">
+                <div class="item-name" onclick="this.classList.toggle('expanded')">
                     {{ item.name }}
                     <span style="display:none">{{ category.name }}</span>
                 </div>
