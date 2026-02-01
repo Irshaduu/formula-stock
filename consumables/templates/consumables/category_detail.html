@@ -22,7 +22,7 @@
         <div class="item-stock">Avg: {{ item.average_stock }} | Score: {{ item.score }}</div>
     </div>
     <div>
-        <details class="dropdown">
+        <details class="details-dropdown">
             <summary>&#8942;</summary>
             <div class="dropdown-menu">
                 <a href="{% url 'edit_item' item.id %}" onclick="return confirm('Edit {{ item.name }}?')">Edit</a>
@@ -43,7 +43,7 @@
         style="font-size: 1rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 1px; margin: 0;">
         {{ sub.name }}
     </h4>
-    <details class="dropdown">
+    <details class="details-dropdown">
         <summary>&#8942;</summary>
         <div class="dropdown-menu">
             <a href="{% url 'edit_subcategory' sub.id %}" onclick="return confirm('Edit {{ sub.name }}?')">Edit</a>
@@ -62,7 +62,7 @@
         <div class="item-stock">Avg: {{ item.average_stock }} | Score: {{ item.score }}</div>
     </div>
     <div>
-        <details class="dropdown">
+        <details class="details-dropdown">
             <summary>&#8942;</summary>
             <div class="dropdown-menu">
                 <a href="{% url 'edit_item' item.id %}" onclick="return confirm('Edit {{ item.name }}?')">Edit</a>

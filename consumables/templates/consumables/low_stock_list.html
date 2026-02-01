@@ -1,28 +1,35 @@
 {% extends 'consumables/base.html' %}
 
 {% block content %}
-<div style="margin-bottom: 20px;">
-    <a href="{% url 'stock_list' %}" style="color: var(--text-secondary);">&lsaquo; Back to Restock</a>
-</div>
+
 
 <h2 style="margin-bottom: 20px; color: var(--accent-red);">Low Stock List</h2>
 
 {% if items %}
 <div style="background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border-color); overflow: hidden;">
     {% for item in items %}
-    <div
-        style="padding: 15px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
-        <div>
-            <div style="font-weight: bold; font-size: 1.1rem;">{{ item.name }}</div>
-            <div style="font-size: 0.9rem; color: var(--text-secondary);">{{ item.category.name }}</div>
-        </div>
-        <div style="text-align: right;">
-            <div style="color: {{ item.stock_status_color }}; font-weight: bold; font-size: 1.2rem;">
-                {{ item.current_stock }}
+    <form method="post" action="{% url 'update_stock' item.id %}"
+        style="padding: 15px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; background: {% if item.current_stock <= 0 %}rgba(255, 59, 48, 0.05){% endif %};">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ request.path }}">
+
+        <div style="flex-grow: 1; margin-right: 15px;">
+            <div style="font-weight: bold; font-size: 1.1rem; color: var(--text-primary);">{{ item.name }}</div>
+            <div style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 4px;">{{ item.category.name }}
             </div>
-            <div style="font-size: 0.8rem; color: var(--text-secondary);">Avg: {{ item.average_stock }}</div>
         </div>
-    </div>
+
+        <div style="display: flex; gap: 10px; align-items: center;">
+            <div style="text-align: right; width: 60px;">
+                <input type="number" name="current_stock" value="{{ item.current_stock }}"
+                    style="width: 100%; padding: 8px; border-radius: 8px; border: 1px solid var(--border-color); background: rgba(0,0,0,0.2); color: white; text-align: center; font-size: 1rem;">
+            </div>
+            <button type="submit" class="btn"
+                style="padding: 8px 15px; background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-primary);">
+                Save
+            </button>
+        </div>
+    </form>
     {% endfor %}
 </div>
 {% else %}

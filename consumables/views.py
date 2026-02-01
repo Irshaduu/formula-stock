@@ -131,6 +131,12 @@ def update_stock(request, item_id):
             item.current_stock = int(new_stock)
             item.save()
             messages.success(request, f"Stock updated for {item.name}")
+    
+    # Smart Redirection
+    next_url = request.POST.get('next') or request.GET.get('next')
+    if next_url:
+        return redirect(next_url)
+        
     return redirect('stock_list')
 
 # Management
@@ -284,11 +290,32 @@ def profile(request, user_id=None):
     else:
         profile_user = request.user
         
-    user_records = ConsumptionRecord.objects.filter(user=profile_user).order_by('-date')
-    total_credits = sum(r.total_credits() for r in user_records)
+    # Aggregate records by item
+    # We group by Item and sum Quantity.
+    aggr_records = ConsumptionRecord.objects.filter(user=profile_user).values(
+        'item__name', 'item__score'
+    ).annotate(
+        total_qty=Sum('quantity')
+    ).order_by('-total_qty')
+    
+    # Calculate total credits and prepare list
+    inventory_list = []
+    total_credits = 0
+    
+    for entry in aggr_records:
+        qty = entry['total_qty']
+        score = entry['item__score']
+        credits = qty * score
+        total_credits += credits
+        
+        inventory_list.append({
+            'name': entry['item__name'],
+            'quantity': qty,
+            'credits': credits
+        })
     
     return render(request, 'consumables/profile.html', {
-        'records': user_records,
+        'inventory': inventory_list,
         'total_credits': total_credits,
         'profile_user': profile_user
     })
@@ -349,7 +376,7 @@ def manage_staff(request):
     if not request.user.is_superuser:
         messages.error(request, "Access restricted to admins.")
         return redirect('home')
-    staff_members = User.objects.all().order_by('username')
+    staff_members = User.objects.filter(is_superuser=False).order_by('username')
     return render(request, 'consumables/manage_staff.html', {'staff_members': staff_members})
 
 @login_required

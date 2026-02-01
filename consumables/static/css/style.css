@@ -119,14 +119,14 @@ a {
 
 /* 3-Dot Menu */
 /* 3-Dot Menu */
-.dropdown {
+.details-dropdown {
     position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.dropdown summary {
+.details-dropdown summary {
     list-style: none;
     /* Hide default triangle */
     list-style-type: none;
@@ -146,19 +146,19 @@ a {
     /* Remove focus outline */
 }
 
-.dropdown summary:hover,
-.dropdown[open] summary {
+.details-dropdown summary:hover,
+.details-dropdown[open] summary {
     background: rgba(255, 255, 255, 0.1);
     color: var(--text-primary);
 }
 
 /* Chrome/Safari marker hide */
-.dropdown summary::-webkit-details-marker {
+.details-dropdown summary::-webkit-details-marker {
     display: none;
 }
 
 /* Remove default arrow if present */
-.dropdown summary::after {
+.details-dropdown summary::after {
     content: none;
 }
 
@@ -457,7 +457,8 @@ a {
 /* Forms */
 input[type="text"],
 input[type="password"],
-input[type="number"] {
+input[type="number"],
+select {
     width: 100%;
     padding: 12px;
     margin: 8px 0;
@@ -466,6 +467,14 @@ input[type="number"] {
     border-radius: 8px;
     color: white;
     font-size: 1rem;
+}
+
+/* Fix for Select Dropdown Options in White Browsers */
+option {
+    background-color: #1e1e1e;
+    /* Force dark background */
+    color: white;
+    /* Force white text */
 }
 
 /* Tiny Search Bar */
@@ -627,4 +636,23 @@ input[type="number"] {
     h3 {
         font-size: 0.95rem;
     }
+}
+
+/* Admin Logout Button */
+.admin-logout-btn {
+    display: block !important;
+    text-align: center;
+    font-size: 0.8rem !important;
+    padding: 6px 10px !important;
+    margin: 8px 10px 5px 10px !important;
+    border: 1px solid var(--accent-red);
+    color: var(--accent-red) !important;
+    background: rgba(255, 59, 48, 0.1);
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.admin-logout-btn:hover {
+    background: var(--accent-red);
+    color: white !important;
 }

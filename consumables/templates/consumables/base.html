@@ -29,12 +29,19 @@
                 <a href="{% url 'manage_categories' %}">Categories</a>
                 {% if request.user.is_superuser %}
                 <a href="{% url 'manage_staff' %}">Staff</a>
-                <a href="{% url 'logout' %}" onclick="return confirm('Logout of Admin?')">Logout</a>
                 {% else %}
                 <a href="{% url 'profile' %}">Profile</a>
                 {% endif %}
                 <a href="{% url 'leaderboard' %}">MVP 👑</a>
+
+                {% if request.user.is_superuser %}
+                <div style="border-top: 1px solid rgba(255,255,255,0.1); margin: 5px 0;"></div>
+                <a href="{% url 'logout' %}" class="admin-logout-btn"
+                    onclick="return confirm('Logout of Admin?')">Logout
+                    Admin</a>
+                {% endif %}
             </div>
+        </div>
         </div>
     </nav>
     {% endif %}
