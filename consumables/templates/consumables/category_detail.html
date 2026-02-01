@@ -66,10 +66,8 @@
             <summary>&#8942;</summary>
             <div class="dropdown-menu">
                 <a href="{% url 'edit_item' item.id %}" onclick="return confirm('Edit {{ item.name }}?')">Edit</a>
-                {% if request.user.is_superuser %}
                 <a href="{% url 'delete_item' item.id %}" class="text-danger"
                     onclick="return confirm('Delete item {{ item.name }}?')">Delete</a>
-                {% endif %}
             </div>
         </details>
     </div>
