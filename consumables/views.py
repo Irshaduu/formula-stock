@@ -70,7 +70,8 @@ def take_item(request, item_id):
                 ConsumptionRecord.objects.create(
                     user=request.user,
                     item=item,
-                    quantity=qty
+                    quantity=qty,
+                    date=timezone.localtime(timezone.now()).date()
                 )
                 messages.success(request, f"Took {qty} {item.name}")
             else:
@@ -87,7 +88,9 @@ def today(request):
     # Show ALL records for today? Or just user's?
     # "user will reach into Today section... and can see that day Took element list"
     # "Edit delete option too."
-    records = ConsumptionRecord.objects.filter(date=timezone.now().date()).order_by('-timestamp')
+    # "Edit delete option too."
+    local_date = timezone.localtime(timezone.now()).date()
+    records = ConsumptionRecord.objects.filter(date=local_date).order_by('-timestamp')
     return render(request, 'consumables/today.html', {'records': records})
 
 @login_required
@@ -334,7 +337,7 @@ def leaderboard(request):
     lifetime_data.sort(key=lambda x: x['score'], reverse=True)
     
     # 2. Weekly Winner / Leader Logic
-    today = timezone.now().date()
+    today = timezone.localtime(timezone.now()).date()
     
     if today.weekday() == 4:
         # It's Friday! Show the COMPLETED week's winner (Last Fri - Thu)

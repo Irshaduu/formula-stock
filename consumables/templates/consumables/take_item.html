@@ -1,29 +1,122 @@
 {% extends 'consumables/base.html' %}
 
 {% block content %}
+<style>
+.take-container {
+    max-width: 480px;
+    margin: auto;
+    padding: 10px;
+}
+
+.take-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 22px 18px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+}
+
+/* Headings */
+.take-title {
+    font-size: 14px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+}
+
+.item-title {
+    font-size: 24px;
+    font-weight: 700;
+    margin: 10px 0 20px;
+}
+
+/* Stock info */
+.stock-box {
+    background: rgba(0,0,0,0.03);
+    border-radius: 12px;
+    padding: 14px;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.stock-box span {
+    font-size: 20px;
+    font-weight: 700;
+}
+
+/* Quantity */
+.qty-label {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+    display: block;
+}
+
+.qty-input {
+    width: 100%;
+    font-size: 20px;
+    padding: 14px;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    text-align: center;
+}
+
+/* Buttons */
+.action-row {
+    margin-top: 40px;
+    display: flex;
+    gap: 12px;
+}
+
+.action-row .btn {
+    flex: 1;
+    padding: 14px;
+    border-radius: 12px;
+    font-size: 16px;
+}
+</style>
+
 <div class="take-container">
-    <h2 style="color: var(--text-secondary);">Taking</h2>
-    <h1 style="font-size: 2rem; margin: 20px 0;">{{ item.name }}</h1>
+    <div class="take-card">
 
-    <div style="margin-bottom: 30px;">
-        Available:
-        <span style="color: {{ item.stock_status_color }}; font-weight: bold;">
-            {{ item.current_stock }}
-        </span>
-    </div>
+        <div class="take-title">Taking</div>
+        <div class="item-title">{{ item.name }}</div>
 
-    <form method="post">
-        {% csrf_token %}
-        <input type="hidden" name="next" value="{{ next_url }}">
-        <label for="quantity" style="display: block; color: var(--text-secondary);">How many?</label>
-        <input type="number" id="quantity" name="quantity" value="1" min="1" max="{{ item.current_stock }}"
-            class="qty-input" autofocus>
-
-        <div style="margin-top: 40px; display: flex; gap: 10px; justify-content: center;">
-            <a href="{% url 'home' %}" class="btn"
-                style="background: transparent; border: 1px solid var(--border-color); color: var(--text-secondary);">Cancel</a>
-            <button type="submit" class="btn btn-primary" style="min-width: 150px;">Confirm</button>
+        <div class="stock-box">
+            Available<br>
+            <span style="color: {{ item.stock_status_color }};">
+                {{ item.current_stock }}
+            </span>
         </div>
-    </form>
+
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ next_url }}">
+
+            <label for="quantity" class="qty-label">How many?</label>
+            <input
+                type="number"
+                id="quantity"
+                name="quantity"
+                value="1"
+                min="1"
+                max="{{ item.current_stock }}"
+                class="qty-input"
+                autofocus
+            >
+
+            <div class="action-row">
+                <a href="{% url 'home' %}"
+                   class="btn"
+                   style="background: transparent; border: 1px solid var(--border-color); color: var(--text-secondary);">
+                    Cancel
+                </a>
+
+                <button type="submit" class="btn btn-primary">
+                    Confirm
+                </button>
+            </div>
+        </form>
+
+    </div>
 </div>
 {% endblock %}
