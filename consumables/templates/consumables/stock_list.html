@@ -204,7 +204,8 @@
         <h3 class="category-title">{{ category.name }}</h3>
 
         {% for item in category.items.all %}
-        <form method="post" action="{% url 'update_stock' item.id %}" class="item-card" data-default-display="flex">
+        <form method="post" action="{% url 'update_stock' item.id %}" class="item-card" data-default-display="flex"
+            style="background: linear-gradient(90deg, var(--card-bg) {{ item.stock_percentage|floatformat:0 }}%, transparent {{ item.stock_percentage|floatformat:0 }}%);">
             {% csrf_token %}
 
             <div class="item-info">
@@ -221,7 +222,8 @@
             </div>
 
             <div class="controls">
-                <input type="number" name="current_stock" value="{{ item.current_stock }}" inputmode="numeric">
+                <input type="number" name="current_stock" value="{{ item.current_stock }}" inputmode="numeric"
+                    style="background-color: {{ item.stock_status_color }}; border-color: {{ item.stock_status_color }}; color: white; font-weight: bold;">
                 <button type="submit" class="btn-save">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"
                         stroke-linejoin="round">
