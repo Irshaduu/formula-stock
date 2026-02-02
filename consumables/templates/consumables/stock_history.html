@@ -1,0 +1,79 @@
+{% extends 'consumables/base.html' %}
+
+{% block content %}
+
+<style>
+    .history-card {
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 14px;
+        overflow: hidden;
+    }
+
+    .history-row {
+        padding: 14px 16px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        transition: background 0.2s ease;
+    }
+
+    .history-row:not(:last-child) {
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .history-row:hover {
+        background: rgba(255, 255, 255, 0.03);
+    }
+
+    .item-name {
+        font-weight: 600;
+        color: var(--text-primary);
+        font-size: 0.95rem;
+        line-height: 1.3;
+        word-break: break-word;
+    }
+
+    .usage-badge {
+        min-width: 48px;
+        text-align: center;
+        padding: 6px 10px;
+        border-radius: 20px;
+        font-weight: 700;
+        font-size: 0.95rem;
+        color: var(--accent-blue);
+        background: rgba(0, 122, 255, 0.12);
+        font-family: monospace;
+    }
+
+    .empty-state {
+        padding: 30px 20px;
+        text-align: center;
+        color: var(--text-secondary);
+        font-size: 0.95rem;
+    }
+</style>
+
+<h2 style="margin-bottom: 18px; color: var(--text-primary);">
+    Stock History <span style="font-size: 0.9rem; color: var(--text-secondary);">(Lifetime Usage)</span>
+</h2>
+
+<div class="history-card">
+    {% for item in items %}
+        <div class="history-row">
+            <div class="item-name">
+                {{ item.name }}
+            </div>
+            <div class="usage-badge">
+                {{ item.usage_count }}
+            </div>
+        </div>
+    {% empty %}
+        <div class="empty-state">
+            No history available yet.
+        </div>
+    {% endfor %}
+</div>
+
+{% endblock %}

@@ -28,6 +28,7 @@ urlpatterns = [
     path('profile/<int:user_id>/', views.profile, name='profile_view'),
     path('leaderboard/', views.leaderboard, name='leaderboard'),
     path('manage/staff/', views.manage_staff, name='manage_staff'),
+    path('manage/history/', views.stock_history, name='stock_history'),
     path('manage/staff/add/', views.add_staff, name='add_staff'),
     path('manage/staff/<int:user_id>/edit/', views.edit_staff, name='edit_staff'),
     path('manage/staff/<int:user_id>/delete/', views.delete_staff, name='delete_staff'),

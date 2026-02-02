@@ -66,7 +66,7 @@ def take_item(request, item_id):
         if qty > 0:
             if item.current_stock >= qty:
                 item.current_stock -= qty
-                item.usage_count += 1
+                item.usage_count += qty
                 item.save()
                 ConsumptionRecord.objects.create(
                     user=request.user,
@@ -436,3 +436,14 @@ def delete_staff(request, user_id):
         user_to_delete.delete()
         messages.success(request, "Staff deleted.")
     return redirect('manage_staff')
+
+@login_required
+def stock_history(request):
+    if not request.user.is_superuser:
+        messages.error(request, "Access denied.")
+        return redirect('home')
+        
+    # Get all items ordered by usage_count (Most Popular first)
+    items = Item.objects.filter(usage_count__gt=0).order_by('-usage_count')
+    
+    return render(request, 'consumables/stock_history.html', {'items': items})
