@@ -28,6 +28,7 @@ class Item(models.Model):
     name = models.CharField(max_length=200)
     average_stock = models.IntegerField(default=0, help_text="Ideal stock level for calculation")
     current_stock = models.IntegerField(default=0)
+    usage_count = models.IntegerField(default=0, help_text="Cached popularity score (frequency of use)")
     score = models.IntegerField(default=1, help_text="Credits earned per unit taken")
 
     class Meta:
@@ -41,7 +42,9 @@ class Item(models.Model):
                 fields=['subcategory', 'name'], 
                 name='unique_subcategory_item_idx'
             )
+
         ]
+        ordering = ['-usage_count', 'name']
 
     def __str__(self):
         return self.name

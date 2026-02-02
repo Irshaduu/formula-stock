@@ -66,6 +66,7 @@ def take_item(request, item_id):
         if qty > 0:
             if item.current_stock >= qty:
                 item.current_stock -= qty
+                item.usage_count += 1
                 item.save()
                 ConsumptionRecord.objects.create(
                     user=request.user,
@@ -121,7 +122,7 @@ def low_stock_list(request):
     ).filter(
         Q(current_stock__lte=0) | 
         Q(current_stock__lt=F('average_stock') * 0.25)
-    ).order_by('category__name', 'name')
+    ).order_by('-usage_count', 'name')
     
     return render(request, 'consumables/low_stock_list.html', {'items': low_stock_items})
 
