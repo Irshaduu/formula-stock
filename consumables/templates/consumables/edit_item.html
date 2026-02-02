@@ -9,12 +9,14 @@
 
     {% if subcategories %}
     <label style="display: block; color: var(--text-secondary);">SubCategory (Optional)</label>
-    <select name="subcategory"
+    <select name="subcategory" required
         style="width: 100%; margin-bottom: 15px; padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--input-bg); color: var(--text-primary);">
-        <option value="">-- None (Direct in Category) --</option>
+        <option value="" disabled>Select SubCategory...</option>
         {% for sub in subcategories %}
         <option value="{{ sub.id }}" {% if item.subcategory_id == sub.id %}selected{% endif %}>{{ sub.name }}</option>
         {% endfor %}
+        <option value="DIRECT" style="color: #ef4444;" {% if not item.subcategory_id %}selected{% endif %}>-- None
+            (Direct in Main Category) --</option>
     </select>
     {% endif %}
 

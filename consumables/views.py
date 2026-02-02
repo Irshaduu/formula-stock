@@ -130,8 +130,9 @@ def update_stock(request, item_id):
     item = get_object_or_404(Item, pk=item_id)
     if request.method == 'POST':
         new_stock = request.POST.get('current_stock')
-        if new_stock:
-            item.current_stock = int(new_stock)
+        if new_stock is not None:
+            # Handle empty string as 0
+            item.current_stock = int(new_stock or 0)
             item.save()
             messages.success(request, f"Stock updated for {item.name}")
     
@@ -235,13 +236,13 @@ def add_item(request, category_id):
     
     if request.method == 'POST':
         name = request.POST.get('name')
-        avg_stock = int(request.POST.get('average_stock', 0))
-        cur_stock = int(request.POST.get('current_stock', 0))
-        score = int(request.POST.get('score', 1))
+        avg_stock = int(request.POST.get('average_stock') or 0)
+        cur_stock = int(request.POST.get('current_stock') or 0)
+        score = int(request.POST.get('score') or 1)
         
         subcategory_id = request.POST.get('subcategory')
         subcategory = None
-        if subcategory_id:
+        if subcategory_id and subcategory_id != 'DIRECT':
             subcategory = get_object_or_404(SubCategory, pk=subcategory_id)
 
         Item.objects.create(
@@ -262,13 +263,13 @@ def edit_item(request, item_id):
     
     if request.method == 'POST':
         item.name = request.POST.get('name')
-        item.average_stock = int(request.POST.get('average_stock', 0))
-        item.current_stock = int(request.POST.get('current_stock', 0))
-        item.score = int(request.POST.get('score', 1))
+        item.average_stock = int(request.POST.get('average_stock') or 0)
+        item.current_stock = int(request.POST.get('current_stock') or 0)
+        item.score = int(request.POST.get('score') or 1)
         
         subcategory_id = request.POST.get('subcategory')
         item.subcategory = None # Default to None
-        if subcategory_id:
+        if subcategory_id and subcategory_id != 'DIRECT':
             item.subcategory = get_object_or_404(SubCategory, pk=subcategory_id)
             
         item.save()
