@@ -97,8 +97,15 @@
     }
 
     @keyframes shimmer {
-        0%, 100% { background-position: 0% 0%; }
-        50% { background-position: 100% 0%; }
+
+        0%,
+        100% {
+            background-position: 0% 0%;
+        }
+
+        50% {
+            background-position: 100% 0%;
+        }
     }
 
     .credits-label {
@@ -138,17 +145,17 @@
     }
 
     .btn {
-        padding: 12px 24px;
-        border-radius: 10px;
+        padding: 6px 12px;
+        border-radius: 8px;
         text-decoration: none;
         font-weight: 600;
-        font-size: 0.9rem;
+        font-size: 0.8rem;
         transition: all 0.3s ease;
         border: none;
         cursor: pointer;
         display: inline-flex;
         align-items: center;
-        gap: 8px;
+        gap: 6px;
     }
 
     .btn-edit {
@@ -307,12 +314,14 @@
         }
 
         .action-buttons {
-            flex-direction: column;
+            flex-direction: row;
         }
 
         .btn {
-            width: 100%;
+            width: auto;
+            flex: 1;
             justify-content: center;
+            font-size: 0.85rem;
         }
 
         .item-quantity {
@@ -330,6 +339,7 @@
             opacity: 0;
             transform: translateY(20px);
         }
+
         to {
             opacity: 1;
             transform: translateY(0);
@@ -340,24 +350,39 @@
         animation: fadeInUp 0.4s ease forwards;
     }
 
-    .item-card:nth-child(1) { animation-delay: 0.05s; }
-    .item-card:nth-child(2) { animation-delay: 0.1s; }
-    .item-card:nth-child(3) { animation-delay: 0.15s; }
-    .item-card:nth-child(4) { animation-delay: 0.2s; }
-    .item-card:nth-child(5) { animation-delay: 0.25s; }
+    .item-card:nth-child(1) {
+        animation-delay: 0.05s;
+    }
+
+    .item-card:nth-child(2) {
+        animation-delay: 0.1s;
+    }
+
+    .item-card:nth-child(3) {
+        animation-delay: 0.15s;
+    }
+
+    .item-card:nth-child(4) {
+        animation-delay: 0.2s;
+    }
+
+    .item-card:nth-child(5) {
+        animation-delay: 0.25s;
+    }
 </style>
 
 <div class="profile-header">
     {% if profile_user == request.user %}
-    <a href="{% url 'logout' %}" onclick="return confirm('Are you sure you want to logout?')" class="profile-logout-btn">
+    <a href="{% url 'logout' %}" onclick="return confirm('Are you sure you want to logout?')"
+        class="profile-logout-btn">
         Logout
     </a>
     {% endif %}
-    
+
     <div class="profile-avatar">
         {{ profile_user.first_name|default:profile_user.username|first|upper }}
     </div>
-    
+
     <h2 class="profile-name">{{ profile_user.first_name|default:profile_user.username }}</h2>
 </div>
 
@@ -366,16 +391,16 @@
     <div class="credits-amount">
         {{ total_credits }}<span class="credits-icon">💰</span>
     </div>
-    
+
     {% if request.user.is_superuser %}
     <div class="action-buttons">
         <a href="{% url 'edit_staff' profile_user.id %}" class="btn btn-edit">
-            ✏️ Edit Account
+            ✏️ Edit
         </a>
         {% if profile_user != request.user %}
         <a href="{% url 'delete_staff' profile_user.id %}" class="btn btn-danger"
             onclick="return confirm('⚠️ Delete {{ profile_user.username }}?\n\nThis action cannot be undone and will permanently delete all their history.')">
-            🗑️ Delete Account
+            🗑️ Delete
         </a>
         {% endif %}
     </div>
