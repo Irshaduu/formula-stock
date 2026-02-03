@@ -9,6 +9,7 @@ email_credentials.py
 # Django
 /media
 /static_root
+db.sqlite3
 
 # Virtual Environment
 venv/
