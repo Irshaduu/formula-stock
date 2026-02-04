@@ -26,17 +26,20 @@
         justify-content: space-around;
         align-items: center;
         position: fixed;
-        bottom: 20px;
-        left: 15px;
-        right: 15px;
-        height: 60px;
-        background: rgba(20, 20, 20, 0.85);
-        /* Dark Glass */
+        bottom: 10px;
+        /* Lower position */
+        left: 10px;
+        right: 10px;
+        height: 50px;
+        /* Much slimmer */
+        background: rgba(20, 20, 20, 0.9);
+        /* Slightly darker for contrast */
         backdrop-filter: blur(16px);
         -webkit-backdrop-filter: blur(16px);
-        border-radius: 20px;
+        border-radius: 25px;
+        /* Pill shape */
         border: 1px solid rgba(255, 255, 255, 0.1);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
         z-index: 1000;
         padding: 0 5px;
     }
@@ -58,19 +61,22 @@
 
     /* Icon Styling */
     .nav-icon {
-        width: 24px;
-        height: 24px;
-        margin-bottom: 4px;
+        width: 20px;
+        /* Smaller Icons */
+        height: 20px;
+        margin-bottom: 2px;
         transition: transform 0.3s;
         /* Default State: Outline Only */
         stroke-width: 2px;
     }
 
     .mobile-link .label {
-        font-size: 0.65rem;
+        font-size: 0.6rem;
+        /* Tiny Labels */
         font-weight: 500;
-        letter-spacing: 0.3px;
-        margin-top: -2px;
+        letter-spacing: 0.2px;
+        margin-top: 0;
+        opacity: 0.8;
     }
 
     /* Active State (Glow Effect) */
