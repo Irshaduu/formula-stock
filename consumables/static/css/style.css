@@ -630,8 +630,9 @@ option {
     }
 
     .item-name {
-        font-size: 0.9rem;
-        font-weight: 500;
+        font-size: 1.1rem;
+        /* Increased from 0.9rem */
+        font-weight: 600;
     }
 
     .item-stock {
@@ -645,8 +646,10 @@ option {
     }
 
     .btn-take {
-        min-width: 50px;
-        padding: 3px 0;
+        min-width: 70px;
+        padding: 6px 0;
+        font-weight: 700;
+        letter-spacing: 0.5px;
     }
 
     .tiny-search {
