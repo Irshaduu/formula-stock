@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>D Stocks</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/mobile_nav.css' %}">
     <link rel="manifest" href="{% static 'manifest.json' %}?v=3">
 
     <!-- iOS Support -->
@@ -54,6 +55,71 @@
         </div>
         </div>
     </nav>
+    {% endif %}
+
+    <!-- Mobile Bottom Navigation -->
+    {% if user.is_authenticated %}
+    <nav class="mobile-nav">
+        <a href="{% url 'home' %}"
+            class="mobile-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}">
+            <span class="icon">🏠</span>
+            <span class="label">Home</span>
+        </a>
+        <a href="{% url 'stock_list' %}"
+            class="mobile-link {% if request.resolver_match.url_name == 'stock_list' %}active{% endif %}">
+            <span class="icon">📦</span>
+            <span class="label">Restock</span>
+        </a>
+        <a href="{% url 'today' %}"
+            class="mobile-link {% if request.resolver_match.url_name == 'today' %}active{% endif %}">
+            <span class="icon">📅</span>
+            <span class="label">Today</span>
+        </a>
+
+        <!-- Manage Dropdown Trigger for Mobile -->
+        <div class="mobile-link dropdown-trigger" onclick="toggleMobileMenu()">
+            <span class="icon">⚙️</span>
+            <span class="label">Manage</span>
+        </div>
+
+        <!-- Mobile Floating Menu (Hidden by default) -->
+        <div id="mobile-menu" class="mobile-menu-overlay">
+            <div class="mobile-menu-content">
+                <div class="mobile-menu-header">
+                    <h3>Manage</h3>
+                    <span class="close-btn" onclick="toggleMobileMenu()">×</span>
+                </div>
+                <div class="mobile-menu-grid">
+                    <a href="{% url 'manage_categories' %}" class="menu-item">📁 Categories</a>
+                    {% if request.user.is_superuser %}
+                    <a href="{% url 'manage_staff' %}" class="menu-item">👥 Staff</a>
+                    <a href="{% url 'stock_history' %}" class="menu-item">📜 History</a>
+                    {% else %}
+                    <a href="{% url 'profile' %}" class="menu-item">👤 Profile</a>
+                    {% endif %}
+                    <a href="{% url 'leaderboard' %}" class="menu-item">👑 MVP</a>
+
+                    {% if request.user.is_superuser %}
+                    <a href="{% url 'logout' %}" class="menu-item logout" onclick="return confirm('Logout?')">🛑
+                        Logout</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <script>
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            if (menu.style.display === 'flex') {
+                menu.style.opacity = '0';
+                setTimeout(() => { menu.style.display = 'none'; }, 200);
+            } else {
+                menu.style.display = 'flex';
+                setTimeout(() => { menu.style.opacity = '1'; }, 10);
+            }
+        }
+    </script>
     {% endif %}
 
     <div class="container">
