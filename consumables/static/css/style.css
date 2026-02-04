@@ -154,12 +154,27 @@ a {
 
 .item-info {
     flex-grow: 1;
+    min-width: 0;
+    /* Critical for text truncation in flexbox */
+    margin-right: 10px;
+    /* Spacing before the button */
 }
 
 .item-name {
     font-weight: 600;
     font-size: 1.1rem;
     color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: pointer;
+    line-height: 1.3;
+}
+
+.item-name.expanded {
+    white-space: normal;
+    overflow: visible;
+    word-break: break-word;
 }
 
 .item-stock {

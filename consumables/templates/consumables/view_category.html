@@ -58,7 +58,7 @@
 <div class="item-card"
     style="background: linear-gradient(90deg, var(--card-bg) {{ item.stock_percentage|floatformat:0 }}%, transparent {{ item.stock_percentage|floatformat:0 }}%); border-color: rgba(255,255,255,0.1);">
     <div class="item-info">
-        <div class="item-name">{{ item.name }}</div>
+        <div class="item-name" onclick="this.classList.toggle('expanded')">{{ item.name }}</div>
     </div>
     <div>
         {% if item.current_stock > 0 %}
