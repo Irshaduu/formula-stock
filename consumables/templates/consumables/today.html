@@ -48,12 +48,16 @@
 
             <span style="
                 font-size: 0.75rem;
-                padding: 1px 6px;
-                border-radius: 4px;
-                background: rgba(255,255,255,0.12);
+                padding: 3px 8px;
+                border-radius: 6px;
+                background: rgba(0, 0, 0, 0.06);
+                color: var(--text-primary);
+                font-weight: 600;
                 flex-shrink: 0;
+                margin-left: auto;
+                border: 1px solid rgba(0,0,0,0.05);
             ">
-                ×{{ record.quantity }}
+                {{ record.quantity|floatformat }}
             </span>
         </div>
 
@@ -69,15 +73,12 @@
 
     <!-- Undo -->
     {% if request.user == record.user %}
-    <a href="{% url 'delete_consumption' record.id %}"
-       class="btn btn-danger"
-       style="
+    <a href="{% url 'delete_consumption' record.id %}" class="btn btn-danger" style="
            padding: 4px 6px;
            font-size: 0.65rem;
            margin-left: 6px;
            line-height: 1;
-       "
-       onclick="return confirm('Undo this? Stock will be restored.')">
+       " onclick="return confirm('Undo this? Stock will be restored.')">
         Undo
     </a>
     {% endif %}
