@@ -230,7 +230,8 @@
             </div>
 
             <div class="controls">
-                <input type="number" name="current_stock" value="{{ item.current_stock }}" inputmode="numeric"
+                <input type="number" name="current_stock" value="{{ item.current_stock }}" inputmode="decimal"
+                    step="0.1"
                     style="background-color: {{ item.stock_status_color }}; border-color: {{ item.stock_status_color }}; color: white; font-weight: bold;">
                 <button type="submit" class="btn-save">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"

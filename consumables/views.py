@@ -62,7 +62,7 @@ def take_item(request, item_id):
     next_url = request.POST.get('next') or request.GET.get('next') or 'home'
     
     if request.method == 'POST':
-        qty = int(request.POST.get('quantity', 0))
+        qty = float(request.POST.get('quantity', 0))
         if qty > 0:
             if item.current_stock >= qty:
                 item.current_stock -= qty
@@ -133,7 +133,7 @@ def update_stock(request, item_id):
         new_stock = request.POST.get('current_stock')
         if new_stock is not None:
             # Handle empty string as 0
-            item.current_stock = int(new_stock or 0)
+            item.current_stock = float(new_stock or 0)
             item.save()
             messages.success(request, f"Stock updated for {item.name}")
     
@@ -237,8 +237,8 @@ def add_item(request, category_id):
     
     if request.method == 'POST':
         name = request.POST.get('name')
-        avg_stock = int(request.POST.get('average_stock') or 0)
-        cur_stock = int(request.POST.get('current_stock') or 0)
+        avg_stock = float(request.POST.get('average_stock') or 0)
+        cur_stock = float(request.POST.get('current_stock') or 0)
         score = int(request.POST.get('score') or 1)
         
         subcategory_id = request.POST.get('subcategory')
@@ -264,8 +264,8 @@ def edit_item(request, item_id):
     
     if request.method == 'POST':
         item.name = request.POST.get('name')
-        item.average_stock = int(request.POST.get('average_stock') or 0)
-        item.current_stock = int(request.POST.get('current_stock') or 0)
+        item.average_stock = float(request.POST.get('average_stock') or 0)
+        item.current_stock = float(request.POST.get('current_stock') or 0)
         item.score = int(request.POST.get('score') or 1)
         
         subcategory_id = request.POST.get('subcategory')

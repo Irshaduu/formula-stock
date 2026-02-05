@@ -26,9 +26,9 @@ class Item(models.Model):
     category = models.ForeignKey(Category, related_name='items', on_delete=models.CASCADE)
     subcategory = models.ForeignKey(SubCategory, related_name='items', on_delete=models.SET_NULL, null=True, blank=True)
     name = models.CharField(max_length=200)
-    average_stock = models.IntegerField(default=0, help_text="Ideal stock level for calculation")
-    current_stock = models.IntegerField(default=0)
-    usage_count = models.IntegerField(default=0, help_text="Cached popularity score (frequency of use)")
+    average_stock = models.FloatField(default=0, help_text="Ideal stock level for calculation")
+    current_stock = models.FloatField(default=0)
+    usage_count = models.FloatField(default=0, help_text="Cached popularity score (frequency of use)")
     score = models.IntegerField(default=1, help_text="Credits earned per unit taken")
 
     class Meta:
@@ -66,7 +66,7 @@ class Item(models.Model):
 class ConsumptionRecord(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
-    quantity = models.IntegerField()
+    quantity = models.FloatField()
     date = models.DateField(default=timezone.now)
     timestamp = models.DateTimeField(auto_now_add=True)
 
