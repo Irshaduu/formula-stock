@@ -78,7 +78,8 @@
            font-size: 0.65rem;
            margin-left: 6px;
            line-height: 1;
-       " onclick="return confirm('Undo this? Stock will be restored.')">
+            line-height: 1;
+       " onclick="confirmAction(event, 'Restore stock for this item?', this.href)">
         Undo
     </a>
     {% endif %}

@@ -2,96 +2,96 @@
 
 {% block content %}
 <style>
-/* Header */
-.page-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 16px;
-}
+    /* Header */
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+    }
 
-.page-header h2 {
-    margin: 0;
-    font-size: 22px;
-    font-weight: 600;
-}
+    .page-header h2 {
+        margin: 0;
+        font-size: 22px;
+        font-weight: 600;
+    }
 
-/* Category Card */
-.item-card {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: #fff;
-    border-radius: 14px;
-    padding: 14px 16px;
-    margin-bottom: 12px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
-}
+    /* Category Card */
+    .item-card {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: #fff;
+        border-radius: 14px;
+        padding: 14px 16px;
+        margin-bottom: 12px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+    }
 
-/* Clickable area */
-.item-link {
-    text-decoration: none;
-    color: inherit;
-    flex: 1;
-}
+    /* Clickable area */
+    .item-link {
+        text-decoration: none;
+        color: inherit;
+        flex: 1;
+    }
 
-/* Info */
-.item-name {
-    font-size: 16px;
-    font-weight: 600;
-}
+    /* Info */
+    .item-name {
+        font-size: 16px;
+        font-weight: 600;
+    }
 
-.item-stock {
-    font-size: 13px;
-    color: #666;
-    margin-top: 2px;
-}
+    .item-stock {
+        font-size: 13px;
+        color: #666;
+        margin-top: 2px;
+    }
 
-/* Three-dot menu */
-.details-dropdown {
-    position: relative;
-}
+    /* Three-dot menu */
+    .details-dropdown {
+        position: relative;
+    }
 
-.details-dropdown summary {
-    list-style: none;
-    cursor: pointer;
-    font-size: 22px;
-    padding: 4px 8px;
-    border-radius: 50%;
-}
+    .details-dropdown summary {
+        list-style: none;
+        cursor: pointer;
+        font-size: 22px;
+        padding: 4px 8px;
+        border-radius: 50%;
+    }
 
-.details-dropdown summary::-webkit-details-marker {
-    display: none;
-}
+    .details-dropdown summary::-webkit-details-marker {
+        display: none;
+    }
 
-/* Dropdown */
-.dropdown-menu {
-    position: absolute;
-    right: 0;
-    top: 28px;
-    background: #fff;
-    border-radius: 10px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
-    overflow: hidden;
-    min-width: 120px;
-    z-index: 10;
-}
+    /* Dropdown */
+    .dropdown-menu {
+        position: absolute;
+        right: 0;
+        top: 28px;
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+        overflow: hidden;
+        min-width: 120px;
+        z-index: 10;
+    }
 
-.dropdown-menu a {
-    display: block;
-    padding: 10px 14px;
-    font-size: 14px;
-    text-decoration: none;
-    color: #333;
-}
+    .dropdown-menu a {
+        display: block;
+        padding: 10px 14px;
+        font-size: 14px;
+        text-decoration: none;
+        color: #333;
+    }
 
-.dropdown-menu a:hover {
-    background: #f2f2f2;
-}
+    .dropdown-menu a:hover {
+        background: #f2f2f2;
+    }
 
-.text-danger {
-    color: #d9534f;
-}
+    .text-danger {
+        color: #d9534f;
+    }
 </style>
 
 <div class="page-header">
@@ -113,13 +113,12 @@
         <summary>&#8942;</summary>
         <div class="dropdown-menu">
             <a href="{% url 'edit_category' category.id %}"
-               onclick="return confirm('Edit {{ category.name }}?')">
+                onclick="confirmAction(event, 'Edit {{ category.name }}?', this.href)">
                 Edit
             </a>
             {% if request.user.is_superuser %}
-            <a href="{% url 'delete_category' category.id %}"
-               class="text-danger"
-               onclick="return confirm('Delete category {{ category.name }}? All items inside will be lost!')">
+            <a href="{% url 'delete_category' category.id %}" class="text-danger"
+                onclick="confirmAction(event, 'Delete category {{ category.name }}? All items inside will be lost!', this.href, true)">
                 Delete
             </a>
             {% endif %}

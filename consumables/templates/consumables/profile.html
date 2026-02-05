@@ -373,7 +373,7 @@
 
 <div class="profile-header">
     {% if profile_user == request.user %}
-    <a href="{% url 'logout' %}" onclick="return confirm('Are you sure you want to logout?')"
+    <a href="{% url 'logout' %}" onclick="confirmAction(event, 'Are you sure you want to logout?', this.href)"
         class="profile-logout-btn">
         Logout
     </a>
@@ -399,7 +399,7 @@
         </a>
         {% if profile_user != request.user %}
         <a href="{% url 'delete_staff' profile_user.id %}" class="btn btn-danger"
-            onclick="return confirm('⚠️ Delete {{ profile_user.username }}?\n\nThis action cannot be undone and will permanently delete all their history.')">
+            onclick="confirmAction(event, '⚠️ Delete {{ profile_user.username }}?\n\nThis action cannot be undone and will permanently delete all their history.', this.href)">
             🗑️ Delete
         </a>
         {% endif %}

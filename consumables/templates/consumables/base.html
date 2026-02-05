@@ -48,7 +48,7 @@
                 {% if request.user.is_superuser %}
                 <div style="border-top: 1px solid rgba(255,255,255,0.1); margin: 5px 0;"></div>
                 <a href="{% url 'logout' %}" class="admin-logout-btn"
-                    onclick="return confirm('Logout of Admin?')">Logout
+                    onclick="confirmAction(event, 'Logout of Admin?', this.href, true)">Logout
                     Admin</a>
                 {% endif %}
             </div>
@@ -114,7 +114,8 @@
                     <a href="{% url 'leaderboard' %}" class="menu-item">👑 MVP</a>
 
                     {% if request.user.is_superuser %}
-                    <a href="{% url 'logout' %}" class="menu-item logout" onclick="return confirm('Logout?')">🛑
+                    <a href="{% url 'logout' %}" class="menu-item logout"
+                        onclick="confirmAction(event, 'Logout?', this.href, true)">🛑
                         Logout</a>
                     {% endif %}
                 </div>
@@ -149,6 +150,64 @@
         {% block content %}
         {% endblock %}
     </div>
+
+    <!-- Custom Confirmation Modal -->
+    <div id="custom-modal-overlay" class="modal-overlay">
+        <div class="modal-box">
+            <h3 class="modal-title">Confirm</h3>
+            <p id="modal-message" class="modal-message">Are you sure?</p>
+            <div class="modal-actions">
+                <button onclick="closeModal()" class="btn-modal-cancel">Cancel</button>
+                <a id="modal-confirm-btn" href="#" class="btn-modal-confirm">Yes</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function confirmAction(event, message, url, isDestructive = false) {
+            event.preventDefault();
+            const overlay = document.getElementById('custom-modal-overlay');
+            const confirmBtn = document.getElementById('modal-confirm-btn');
+            const title = document.querySelector('.modal-title');
+
+            document.getElementById('modal-message').innerText = message;
+            confirmBtn.href = url;
+
+            // Handle Destructive/Warning Mode
+            if (isDestructive) {
+                overlay.classList.add('danger-mode');
+                title.innerText = "⚠️ Warning";
+                title.style.color = "var(--accent-red)";
+                confirmBtn.innerText = "Delete";
+            } else {
+                overlay.classList.remove('danger-mode');
+                title.innerText = "Confirm";
+                title.style.color = "var(--text-primary)";
+                confirmBtn.innerText = "Yes";
+            }
+
+            overlay.style.display = 'flex';
+            // Small delay to allow display:flex to apply before opacity transition
+            setTimeout(() => {
+                overlay.classList.add('active');
+            }, 10);
+        }
+
+        function closeModal() {
+            const overlay = document.getElementById('custom-modal-overlay');
+            overlay.classList.remove('active');
+            setTimeout(() => {
+                overlay.style.display = 'none';
+            }, 200);
+        }
+
+        // Close on clicking outside
+        document.getElementById('custom-modal-overlay').addEventListener('click', function (e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+    </script>
 
 </body>
 

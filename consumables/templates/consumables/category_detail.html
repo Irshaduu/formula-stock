@@ -25,9 +25,10 @@
         <details class="details-dropdown">
             <summary>&#8942;</summary>
             <div class="dropdown-menu">
-                <a href="{% url 'edit_item' item.id %}" onclick="return confirm('Edit {{ item.name }}?')">Edit</a>
+                <a href="{% url 'edit_item' item.id %}"
+                    onclick="confirmAction(event, 'Edit {{ item.name }}?', this.href)">Edit</a>
                 <a href="{% url 'delete_item' item.id %}" class="text-danger"
-                    onclick="return confirm('Delete item {{ item.name }}?')">Delete</a>
+                    onclick="confirmAction(event, 'Delete item {{ item.name }}?', this.href, true)">Delete</a>
             </div>
         </details>
     </div>
@@ -46,10 +47,11 @@
     <details class="details-dropdown">
         <summary>&#8942;</summary>
         <div class="dropdown-menu">
-            <a href="{% url 'edit_subcategory' sub.id %}" onclick="return confirm('Edit {{ sub.name }}?')">Edit</a>
+            <a href="{% url 'edit_subcategory' sub.id %}"
+                onclick="confirmAction(event, 'Edit {{ sub.name }}?', this.href)">Edit</a>
             {% if request.user.is_superuser %}
             <a href="{% url 'delete_subcategory' sub.id %}" class="text-danger"
-                onclick="return confirm('Delete subcategory {{ sub.name }}? All items inside will be lost!')">Delete</a>
+                onclick="confirmAction(event, 'Delete subcategory {{ sub.name }}? All items inside will be lost!', this.href, true)">Delete</a>
             {% endif %}
         </div>
     </details>
@@ -65,9 +67,10 @@
         <details class="details-dropdown">
             <summary>&#8942;</summary>
             <div class="dropdown-menu">
-                <a href="{% url 'edit_item' item.id %}" onclick="return confirm('Edit {{ item.name }}?')">Edit</a>
+                <a href="{% url 'edit_item' item.id %}"
+                    onclick="confirmAction(event, 'Edit {{ item.name }}?', this.href)">Edit</a>
                 <a href="{% url 'delete_item' item.id %}" class="text-danger"
-                    onclick="return confirm('Delete item {{ item.name }}?')">Delete</a>
+                    onclick="confirmAction(event, 'Delete item {{ item.name }}?', this.href, true)">Delete</a>
             </div>
         </details>
     </div>
