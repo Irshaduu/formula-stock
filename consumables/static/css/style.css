@@ -640,9 +640,9 @@ option {
     }
 
     .btn {
-        padding: 4px 10px;
-        font-size: 0.8rem;
-        border-radius: 6px;
+        padding: 12px 20px;
+        font-size: 1rem;
+        border-radius: 8px;
     }
 
     .btn-take {
